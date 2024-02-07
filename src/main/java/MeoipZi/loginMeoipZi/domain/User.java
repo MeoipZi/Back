@@ -20,11 +20,9 @@ public class User {
     @Column(name = "email", length = 50, unique = true)
     private String username;
 
+    //아직 oauth2를 안 넣어서 password 추가 - social이 없는 상태
     @Column(name = "password", length = 100)
     private String password;
-
-    @Column(name = "nickname", length = 50)
-    private String nickname;
 
     @Column(name = "activated")
     private boolean activated;
@@ -35,5 +33,21 @@ public class User {
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
     private Set<Authority> authorities;
+
+// 이 브랜치의 domain에 heart, scrap, commentCommunity, commentoutfit, commentshortform을 안 넣어놔서 주석처리함.
+//    @OneToMany(mappedBy = "user")
+//    private List<Heart> likes = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "user")
+//    private List<Scrap> scraps = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "user")
+//    private List<CommentCommunity> commentCommunities = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "user")
+//    private List<CommentOutfit> commentOutfits  = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "user")
+//    private List<CommentShortForm> commentShortForms = new ArrayList<>();    
 }
 
