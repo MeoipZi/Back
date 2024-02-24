@@ -1,0 +1,44 @@
+spring:
+
+  h2:
+    console:
+      enabled: true
+
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/meoipzi
+    driver-class-name: org.h2.Driver
+    username: meoipzi
+    password: meoipzi31
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+    defer-datasource-initialization: true
+
+logging:
+  level:
+    MeoipZi.loginMeoipZi: DEBUG
+
+cloud:
+  aws:
+    credentials:
+      accessKey: AKIARBD2KDLFRUIMONGA
+      secretKey: 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
+    s3:
+      bucket: meoipzi
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
+jwt:
+  header: Authorization
+  #HS512 ????? ??? ??? ??? 512bit, ? 64byte ??? secret key? ???? ??.
+  #echo 'MeoipZi, a project to revitalize used clothing trade and spread positive awareness about used clothing'|base64
+  secret: TWVvaXBaaSwgYSBwcm9qZWN0IHRvIHJldml0YWxpemUgdXNlZCBjbG90aGluZyB0cmFkZSBhbmQgc3ByZWFkIHBvc2l0aXZlIGF3YXJlbmVzcyBhYm91dCB1c2VkIGNsb3RoaW5n
+  token-validity-in-seconds: 86400
