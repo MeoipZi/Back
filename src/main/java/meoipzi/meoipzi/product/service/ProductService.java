@@ -3,6 +3,7 @@ package meoipzi.meoipzi.product.service;
 import lombok.RequiredArgsConstructor;
 import meoipzi.meoipzi.config.S3Config;
 import meoipzi.meoipzi.login.domain.User;
+import meoipzi.meoipzi.login.exception.NotFoundMemberException;
 import meoipzi.meoipzi.login.repository.UserRepository;
 import meoipzi.meoipzi.outfit.domain.Outfit;
 import meoipzi.meoipzi.product.domain.Product;
@@ -11,6 +12,7 @@ import meoipzi.meoipzi.product.dto.ProductRequestDTO;
 import meoipzi.meoipzi.product.dto.ProductResponseDTO;
 import meoipzi.meoipzi.outfit.repository.OutfitRepository;
 import meoipzi.meoipzi.product.repository.ProductRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,32 +32,35 @@ public class ProductService {
     private final OutfitRepository outfitRepository;
 
     @Transactional
-    public void join(ProductRequestDTO productRequestDTO){
+    public ResponseEntity<?> saveProduct(ProductRequestDTO productRequestDTO){
+        User user = userRepository.findByUsername(productRequestDTO.getUsername())
+                .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + productRequestDTO.getUsername()));
+
+
+        Outfit outfit = outfitRepository.findById( productRequestDTO.getOutfitId())
+                .orElseThrow(() -> new NotFoundMemberException("Could not found outfit : " + productRequestDTO.getOutfitId()));
+
+
         try{
             if(productRequestDTO.getImgUrl() != null){
                 String filePath = s3Config.upload(productRequestDTO.getImgUrl());
-                productRequestDTO.toEntity().setImgUrl(filePath); // 이걸로 바꾸기!
+                Product product = productRequestDTO.toEntity(user); //DTO를 엔티티로 변환
+                product.setImgUrl(filePath);
+                product.setOutfit(outfit);
+                productRepository.save(product);
             }
-            Long userId = productRequestDTO.getUserId();
-            Optional<User> user = userRepository.findById(userId);
-
-            Long outfitId = productRequestDTO.getOutfitId();
-            Optional<Outfit> outfit = outfitRepository.findById(outfitId);
-
-            Product product = productRequestDTO.toEntity(); //DTO를 엔티티로 변환
-            product.setUser(user.get());
-            product.setOutfit(outfit.get());
-
-            productRepository.save(product);
 
         }catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return ResponseEntity.ok(productRequestDTO);
     }
 
     public ProductResponseDTO findOneProduct(Long productId){
-        Optional<Product> product = productRepository.findById(productId);
-        return new ProductResponseDTO(product.get());
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("해당 ID의 제품을 찾을 수 없습니다."));
+
+        return new ProductResponseDTO(product);
     }
 
     //outfitId와 같은 3개의 상품 가져오기 // service에 위치함.

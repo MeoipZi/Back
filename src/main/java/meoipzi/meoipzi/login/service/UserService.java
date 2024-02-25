@@ -1,6 +1,7 @@
 package meoipzi.meoipzi.login.service;
 
 
+import lombok.RequiredArgsConstructor;
 import meoipzi.meoipzi.login.domain.Authority;
 import meoipzi.meoipzi.login.domain.User;
 import meoipzi.meoipzi.login.dto.UserDto;
@@ -17,19 +18,15 @@ import java.util.Collections;
 
 @Log4j2
 @Service
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
-
     @Transactional
     public UserDto signup(UserDto userDto) {
         if (userRepository.findOneWithAuthoritiesByUsername(userDto.getUsername()).orElse(null) != null) {
-            throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
+            throw new DuplicateMemberException("이미 존재하는 이메일입니다.");
         }
 
         Authority authority = Authority.builder()

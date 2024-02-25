@@ -34,11 +34,12 @@ public class Product {
     private Outfit outfit;
 
     @Builder
-    public Product(String imgUrl, String shopName, String title, Long price, String shopUrl){
+    public Product(String imgUrl, String shopName, String title, Long price, String shopUrl, User user){
         this.imgUrl = imgUrl;
         this.shopName = shopName;
         this.title =title;
         this.price = price;
         this.shopUrl = shopUrl;
+        this.user = user;
     }
 }

@@ -1,11 +1,13 @@
 package meoipzi.meoipzi.outfit.domain;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import jakarta.persistence.*;
 import lombok.*;
 import meoipzi.meoipzi.domain.CommentOutfit;
 import meoipzi.meoipzi.domain.Like;
 import meoipzi.meoipzi.login.domain.User;
 import meoipzi.meoipzi.product.domain.Product;
+import org.hibernate.annotations.Cascade;
 
 
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import java.util.List;
 @Table(name = "outfits")
 @NoArgsConstructor
 //@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Outfit {
     @GeneratedValue
     @Id
@@ -48,12 +51,13 @@ public class Outfit {
 
 
     @Builder
-    public Outfit( String imgUrl, String content,  Long modelHeight,  Long modelWeight,String modelInstagramId, String modelGender){
+    public Outfit( String imgUrl, String content,  Long modelHeight,  Long modelWeight,String modelInstagramId, String modelGender, User user){
         this.imgUrl = imgUrl;
         this.content = content;
         this.modelHeight = modelHeight;
         this.modelWeight= modelWeight;
         this.modelInstagramId =modelInstagramId;
         this.modelGender = modelGender;
+        this.user = user;
     }
 }

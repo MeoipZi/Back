@@ -59,6 +59,7 @@ public class TokenProvider implements InitializingBean {
     }
 
     //토큰에 담겨 있는 권한 정보들을 이용해서 authentication 객체를 리턴
+    //토큰에서 인증정보 조회
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts
                 .parserBuilder()
@@ -77,7 +78,7 @@ public class TokenProvider implements InitializingBean {
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 
-    //토큰 유효성 검사
+    //토큰 유효성 검사 -토큰의 서명(secret key) 확인 및 만료 여부 확인
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);

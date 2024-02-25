@@ -1,5 +1,6 @@
 package meoipzi.meoipzi.login.dto;
 
+import meoipzi.meoipzi.login.domain.Authority;
 import meoipzi.meoipzi.login.domain.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -8,7 +9,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 @Getter
 @Setter
 @Builder
