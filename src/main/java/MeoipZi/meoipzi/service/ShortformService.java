@@ -1,5 +1,6 @@
 package MeoipZi.meoipzi.service;
 
+import MeoipZi.meoipzi.Exception.NotFoundMemberException;
 import MeoipZi.meoipzi.config.S3Config;
 import MeoipZi.meoipzi.domain.Community;
 import MeoipZi.meoipzi.domain.Shortform;
@@ -16,6 +17,7 @@ import MeoipZi.meoipzi.repository.ShortformRepository;
 import MeoipZi.meoipzi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -36,6 +38,7 @@ public class ShortformService {
     private final UserRepository userRepository;
     private final S3Config s3Config;
 
+    @Transactional
     // 모든 커뮤니티 글 리스트 조회
     public List<ShortformListResponseDTO> getShortformList() {
         try {
@@ -48,24 +51,23 @@ public class ShortformService {
         }
     }
 
+    @Transactional
     // 숏폼 글 등록
-    public void join(ShortformRequestDTO shortformRequestDTO) {
+    public ResponseEntity<?> saveShortform(ShortformRequestDTO shortformRequestDTO) {
+        User user = userRepository.findByUsername(shortformRequestDTO.getUsername())
+                .orElseThrow(() -> new NotFoundMemberException("사용자를 찾을 수 없습니다: " + shortformRequestDTO.getUsername()));
+
         try {
             if (shortformRequestDTO.getImgUrl() != null) {
                 String filePath = s3Config.upload(shortformRequestDTO.getImgUrl());
-                shortformRequestDTO.toEntity().setImgUrl(filePath);
+                Shortform shortform = shortformRequestDTO.toEntity();
+                shortform.setImgUrl(filePath);
+                shortformRepository.save(shortformRequestDTO.toEntity());
             }
-            Long userId = shortformRequestDTO.getUserId();
-
-            Optional<User> user = userRepository.findById(userId);
-
-            Shortform shortform = shortformRequestDTO.toEntity();
-            shortform.setUser(user.get());
-
-            shortformRepository.save(shortformRequestDTO.toEntity());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return ResponseEntity.ok(shortformRequestDTO);
     }
 
     // 숏폼 글 삭제

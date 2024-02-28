@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 @NoArgsConstructor
 public class ShortformRequestDTO {
-    private Long userId;
+    private String username;
 
     private MultipartFile imgUrl;
     private String title;

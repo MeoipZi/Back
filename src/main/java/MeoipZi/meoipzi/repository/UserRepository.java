@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     @EntityGraph(attributePaths = "authorities")//Lazy조회가 아닌 Eager조회로 authorities정보를 같이 가져옴
     Optional<User> findOneWithAuthoritiesByUsername(String username);
+    Optional<User> findByUsername(String username); // user entity의 필드 username이 메서드에 쓰이는 것
 }
+

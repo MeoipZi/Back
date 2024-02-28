@@ -16,8 +16,11 @@ import MeoipZi.meoipzi.repository.ShortformRepository;
 import MeoipZi.meoipzi.service.CommunityService;
 import MeoipZi.meoipzi.service.ShortformService;
 import lombok.RequiredArgsConstructor;
-import org.apache.http.HttpStatus;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,44 +42,58 @@ public class ShortformController {
         try {
             List<ShortformListResponseDTO> shortformListResponseDTOS = shortformService.getShortformList();
 
-            return ResponseEntity.ok(shortformListResponseDTOS); // 조회된 커뮤니티 글 리스트 형식 반환
+            return new ResponseEntity<>(shortformListResponseDTOS, HttpStatus.OK); // 조회된 커뮤니티 글 리스트 형식 반환
         } catch(Exception e) {
-            return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).build();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     /* 커뮤니티 게시글 하나 상세 조회 */
     @GetMapping("/{shortformId}")
-    public ResponseEntity<ShortformResponseDTO> getOneCommunity(@PathVariable Long shortformId) {
+    public ResponseEntity<?> getOneCommunity(@PathVariable Long shortformId) {
         try {
             ShortformResponseDTO shortformResponseDTO = shortformService.viewShortform(shortformId);
-
-            return ResponseEntity.ok(shortformResponseDTO);
+            return new ResponseEntity<>(shortformResponseDTO, HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).build();
+           return new ResponseEntity<>("알 수 없는 오류가 발생하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     /* 숏폼 글 등록 */
     @PostMapping("")
-    public void createPost(ShortformRequestDTO shortformRequestDTO){
-        shortformService.join(shortformRequestDTO);
+    public ResponseEntity<?> createPost(ShortformRequestDTO shortformRequestDTO){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(authentication.isAuthenticated()) {
+            try {
+                shortformService.saveShortform(shortformRequestDTO);
+                return new ResponseEntity<>("숏폼 등록에 성공하였습니다.", HttpStatus.OK);
+            } catch(Exception e) {
+                return new ResponseEntity<>("숏폼 등록에 실패하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        else return new ResponseEntity<>("접근 권한이 없습니다.", HttpStatus.FORBIDDEN);
     }
 
     /* 숏폼 글 삭제 */
     @DeleteMapping("/{shortformId}")
-    public ResponseEntity<String> deletePost(@PathVariable Long shortformId) {
-        try {
-            shortformService.deleteShortform(shortformId);
-            return ResponseEntity.ok("숏폼 삭제에 성공하였습니다.");
-        } catch (Exception e) {
-            return ResponseEntity.ofNullable("숏폼 삭제 중에 오류가 발생하였습니다.");
+    public ResponseEntity<?> deletePost(@PathVariable Long shortformId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(authentication.isAuthenticated()){
+            try {
+                shortformService.deleteShortform(shortformId);
+                return new ResponseEntity<>("숏폼이 삭제에 성공하였습니다.", HttpStatus.OK);
+            } catch (Exception e) {
+                return new ResponseEntity<>("숏폼 삭제 중에 오류가 발생하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         }
+        else return new ResponseEntity<>("접근 권한이 없습니다.", HttpStatus.FORBIDDEN);
     }
 
-    /* 숏폼 글 수정 */
+/*
+*  *//* 숏폼 글 수정 *//*
     @PatchMapping("/{shortformId}")
-    /* 게시글 수정 */
     public ResponseEntity<String> updatePost(@PathVariable Long shortformId, ShortformUpdateRequestDTO shortformUpdateRequestDTO) {
         try {
            shortformService.updateShortform(shortformId, shortformUpdateRequestDTO);
@@ -85,6 +102,7 @@ public class ShortformController {
             return ResponseEntity.ofNullable("게시글 수정에 실패하였습니다.");
         }
     }
+    */
 
 }
 

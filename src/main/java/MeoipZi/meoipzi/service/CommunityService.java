@@ -1,6 +1,7 @@
 package MeoipZi.meoipzi.service;
 
 
+import MeoipZi.meoipzi.Exception.NotFoundMemberException;
 import MeoipZi.meoipzi.config.S3Config;
 import MeoipZi.meoipzi.domain.Community;
 import MeoipZi.meoipzi.domain.User;
@@ -13,6 +14,9 @@ import MeoipZi.meoipzi.repository.CommunityRepository;
 import MeoipZi.meoipzi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -33,7 +37,8 @@ public class CommunityService {
     private final S3Config s3Config;
     private final UserRepository userRepository;
 
-    // 모든 커뮤니티 글 리스트 조회
+    @Transactional
+    // 모든 커뮤니티 글 리스트 조회 + 로그인 여부 확인
     public List<CommunityListResponseDTO> getCommunityList() {
         try {
             List<CommunityListResponseDTO> communityList = communityRepository.findAll()
@@ -47,24 +52,23 @@ public class CommunityService {
         }
     }
 
+    @Transactional
     // 커뮤니티 글 등록
-    public void join(CommunityRequestDTO communityRequestDTO) {
+    public ResponseEntity<?> saveCommunity(CommunityRequestDTO communityRequestDTO) {
+        User user = userRepository.findByUsername(communityRequestDTO.getUserName())
+                .orElseThrow(()-> new NotFoundMemberException("해당 이메일에 해당하는 회원이 없습니다. : "+ communityRequestDTO.getUserName()));
+
         try {
-            if (communityRequestDTO.getImgUrl() != null) {
+            if(communityRequestDTO.getImgUrl() != null) {
                 String filePath = s3Config.upload(communityRequestDTO.getImgUrl());
-                communityRequestDTO.toEntity().setImgUrl(filePath);
+                Community community = communityRequestDTO.toEntity();
+                community.setImgUrl(filePath);
+                communityRepository.save(community);
             }
-            Long userId = communityRequestDTO.getUserId();
-
-            Optional<User> user = userRepository.findById(userId);
-
-            Community community = communityRequestDTO.toEntity();
-            community.setUser(user.get());
-
-            communityRepository.save(communityRequestDTO.toEntity());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return ResponseEntity.ok(communityRequestDTO);
     }
 
     // 커뮤니티 글 삭제
@@ -98,6 +102,7 @@ public class CommunityService {
     }
 
     // 커뮤니티 글 하나 상세 조회
+    @Transactional
     public CommunityResponseDTO viewCommunity(Long communityId){
       try {
           // 조회할 커뮤니티글이 존재하는지 확인
