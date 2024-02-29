@@ -8,15 +8,13 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @NoArgsConstructor
-public class ShortFormResponseDto {
+public class MyImageResponseDto {
 
     private Long id;
-    private String title;
     private String imgUrl;
     private LocalDateTime createAt;
-    public ShortFormResponseDto(Long id, String title, String imgUrl, LocalDateTime createAt) {
+    public MyImageResponseDto(Long id, String imgUrl, LocalDateTime createAt) {
         this.id = id;
-        this.title = title;
         this.imgUrl = imgUrl;
         this.createAt = createAt;
     }

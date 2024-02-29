@@ -9,8 +9,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MultipleDto {
+public class MyScrapsDto {
 
-    private List<CommunityResponseDto> uploadedComms;
-    private List<ShortFormResponseDto> uploadedSFs;
+    private List<MyImageResponseDto> scrapedOutfits;
+    private List<MyImageResponseDto> scrapedProducts;
+
 }

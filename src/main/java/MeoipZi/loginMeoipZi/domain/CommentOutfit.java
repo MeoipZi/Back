@@ -9,12 +9,12 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@Table(name = "commentOutfits")
+@Table(name = "CMTOUTFIT")
 public class CommentOutfit {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name="comment_outfit_id")
+    @Column(name="cmtoutfit_id")
     private Long id;
 
     String content;

@@ -69,7 +69,7 @@ public class SecurityConfig {
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/**").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/api/mypage/**").authenticated()
-                        //.anyRequest().authenticated()
+                        //.anyRequest().uthenticated()
                 )
 
                 // 세션을 사용하지 않기 때문에 STATELESS로 설정

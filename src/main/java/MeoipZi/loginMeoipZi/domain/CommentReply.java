@@ -9,11 +9,10 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@Table(name = "CMTCOMM")
-public class CommentCommunity {
-
+@Table(name = "CMTREPLY")
+public class CommentReply {
     @Id
-    @Column(name="cmtcomm_id")
+    @Column(name="cmtreply_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -22,9 +21,9 @@ public class CommentCommunity {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="community_id")
-    private Community community;
+    @JoinColumn(name="cmtcomm_id")
+    private CommentCommunity cmtcomm;
 
-    private String contents; //comment로 바꾸고 싶다...
+    private String contents;
     private LocalDateTime createdAt;
 }

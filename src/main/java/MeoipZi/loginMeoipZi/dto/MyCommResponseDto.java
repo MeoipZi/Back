@@ -8,14 +8,14 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @NoArgsConstructor
-public class CommunityResponseDto {
+public class MyCommResponseDto {
 
     private Long id;
     private String title;
     private int likesCount;
     private int cmtCount;
     private LocalDateTime createAt;
-    public CommunityResponseDto(Long id, String title, int likesCount, int cmtCount, LocalDateTime createAt) {
+    public MyCommResponseDto(Long id, String title, int likesCount, int cmtCount, LocalDateTime createAt) {
         this.id = id;
         this.title = title;
         this.likesCount = likesCount;

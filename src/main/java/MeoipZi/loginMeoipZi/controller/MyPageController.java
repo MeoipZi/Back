@@ -19,25 +19,25 @@ public class MyPageController {
 
     //내가 작성한 post - 피드 탭
     @GetMapping("/posts/feeds")
-    public ResponseEntity<?> postingFeeds(Principal principal) throws IOException {
-        return myPageService.uploadedFeeds(principal);
+    public ResponseEntity<?> postedFeeds(Principal principal) throws IOException {
+        return myPageService.getFeeds(principal);
     }
 
-    //내가 작성한 post - 스크랩 탭
+    //내가 등록한 post - 스크랩 탭
     @GetMapping("/posts/scraps")
-    public ResponseEntity<?> postingScrap(Principal principal) throws IOException {
-        return myPageService.uploadedFeeds(principal);
+    public ResponseEntity<?> postedScrap(Principal principal) throws IOException {
+        return myPageService.getScraps(principal);
     }
 
     //내가 작성한 post - 댓글 탭
     @GetMapping("/posts/comments")
-    public ResponseEntity<?> postingComments(Principal principal) throws IOException {
-        return myPageService.uploadedFeeds(principal);
+    public ResponseEntity<?> postedComments(Principal principal) throws IOException {
+        return myPageService.getComments(principal);
     }
 
     //내가 like (코디, 숏폼)
     @GetMapping("/likes")
-    public ResponseEntity<?> likeContents(Principal principal) throws IOException {
-        return myPageService.uploadedFeeds(principal);
+    public ResponseEntity<?> likedContents(Principal principal) throws IOException {
+        return myPageService.getLikes(principal);
     }
 }
