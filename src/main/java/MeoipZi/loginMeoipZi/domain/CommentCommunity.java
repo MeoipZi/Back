@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,6 +27,14 @@ public class CommentCommunity {
     @JoinColumn(name="community_id")
     private Community community;
 
+    @ManyToOne
+    @JoinColumn(name="parent_cmt_id")
+    private CommentCommunity parentCmt;
+
+    @OneToMany(mappedBy="parentCmt")
+    private List<CommentCommunity> childComments;
+
     private String contents; //comment로 바꾸고 싶다...
     private LocalDateTime createdAt;
+
 }

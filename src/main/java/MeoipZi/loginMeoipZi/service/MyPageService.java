@@ -30,7 +30,6 @@ public class MyPageService {
     private final CommentOutfitRepository cmtOutfitRepository;
     private final CommentShortFormRepository cmtSFRepository;
     private final CommentCommunityRepository cmtCommRepository;
-    private final CommentReplyRepository cmtReplyRepository;
 
     @Transactional
     public ResponseEntity<?> getFeeds(Principal principal) throws IOException {
@@ -80,20 +79,18 @@ public class MyPageService {
         //load 3 comments - outfit, community, shortform, reply
         List<CommentOutfit> cmtOutfitList = cmtOutfitRepository.findTop3ByUserOrderByCreatedAtDesc(user);
         List<CommentShortForm> cmtSFList = cmtSFRepository.findTop3ByUserOrderByCreatedAtDesc(user);
-        List<CommentCommunity> cmtCommList = cmtCommRepository.findTop3ByUserOrderByCreatedAtDesc(user);
-        List<CommentReply> cmtReplyList = cmtReplyRepository.findTop3ByUserOrderByCreatedAtDesc(user);
+        List<CommentCommunity> cmtCommList = cmtCommRepository.findTop3DistinctCommentsByUserOrderByCreatedAtDesc(user);
 
-        if(cmtOutfitList.isEmpty()&&cmtSFList.isEmpty()&&cmtCommList.isEmpty()&&cmtReplyList.isEmpty()){
+        if(cmtOutfitList.isEmpty()&&cmtSFList.isEmpty()&&cmtCommList.isEmpty()){
             throw new NotFoundContentException("Could not find comments for user: " + username);
         }
         log.info("outfits 댓글: {}", cmtOutfitList.isEmpty());
         log.info("shortforms 댓글: {}", cmtSFList.isEmpty());
         log.info("comms 댓글: {}", cmtCommList.isEmpty());
-        log.info("replys: {}", cmtReplyList.isEmpty());
 
         List<MyImageResponseDto> cmtOutfits = new ArrayList<>();
         List<MyImageResponseDto> cmtShortForms = new ArrayList<>();
-        List<MyCommResponseDto> cmtCommsReplys = new ArrayList<>();
+        List<MyCommResponseDto> cmtComms = new ArrayList<>();
         MyCommentsDto myComments = new MyCommentsDto();
 
 
@@ -111,17 +108,16 @@ public class MyPageService {
                 cmtShortForms.add(cmtShortForm);
             }
         }
-        //댓글이랑 대댓글을 한번에 보여주려면 어떻게 해야하지 테이블이 다른데...
-        if(!cmtCommList.isEmpty() || !cmtReplyList.isEmpty()){
+        if(!cmtCommList.isEmpty()){
             for(CommentCommunity cmt: cmtCommList){
                 Community comm = cmt.getCommunity();
                 MyCommResponseDto cmtComm = new MyCommResponseDto(comm.getId(), comm.getTitle(), comm.getLikesCount(), comm.getCmtCount(), cmt.getCreatedAt());
-                cmtCommsReplys.add(cmtComm);
+                cmtComms.add(cmtComm);
             }
         }
         myComments.setCmtOutfits(cmtOutfits);
         myComments.setCmtShortforms(cmtShortForms);
-        myComments.setCmtComms(cmtCommsReplys);
+        myComments.setCmtComms(cmtComms);
         return new ResponseEntity<>(myComments, HttpStatus.OK);
     }
 
@@ -132,8 +128,8 @@ public class MyPageService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + username));
 
-        List<Scrap> outfitList = scrapRepository.findTop3ByUserOutfitNotNullOrderByCreatedAtDesc(user);
-        List<Scrap> productList = scrapRepository.findTop3ByUserProductNotNullOrderByCreatedAtDesc(user);
+        List<Scrap> outfitList = scrapRepository.findTop3ByUserAndOutfitNotNullOrderByCreatedAtDesc(user);
+        List<Scrap> productList = scrapRepository.findTop3ByUserAndProductNotNullOrderByCreatedAtDesc(user);
         if(outfitList.isEmpty()&&productList.isEmpty()){
             throw new NotFoundContentException("Could not find scraps for user: " + username);
         }
@@ -171,9 +167,9 @@ public class MyPageService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + username));
 
-        List<Heart> outfitList = heartRepository.findTop3ByUserOutfitNotNullOrderByCreatedAtDesc(user);
-        List<Heart> commList = heartRepository.findTop3ByUserCommunityNotNullOrderByCreatedAtDesc(user);
-        List<Heart> shortFormList = heartRepository.findTop3ByUserShortFormNotNullOrderByCreatedAtDesc(user);
+        List<Heart> outfitList = heartRepository.findTop3ByUserAndOutfitNotNullOrderByCreatedAtDesc(user);
+        List<Heart> commList = heartRepository.findTop3ByUserAndCommunityNotNullOrderByCreatedAtDesc(user);
+        List<Heart> shortFormList = heartRepository.findTop3ByUserAndShortFormNotNullOrderByCreatedAtDesc(user);
 
         if(outfitList.isEmpty()&&shortFormList.isEmpty()&&commList.isEmpty()){
             throw new NotFoundContentException("Could not find likes for user: " + username);

@@ -41,7 +41,7 @@ public class User {
     private List<Community> comms = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<ShortForm> shortforms = new ArrayList<>();
+    private List<ShortForm> shortForms = new ArrayList<>();
 
 
 }

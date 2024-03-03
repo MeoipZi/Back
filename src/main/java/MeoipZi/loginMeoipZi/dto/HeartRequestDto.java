@@ -15,6 +15,7 @@ public class HeartRequestDto {
         this.username = name;
     }
     public void setContentId(Long id){
+
         this.contentId = id;
     }
 }

@@ -1,8 +1,6 @@
 package MeoipZi.loginMeoipZi.controller;
 
-import MeoipZi.loginMeoipZi.dto.HeartRequestDto;
 import MeoipZi.loginMeoipZi.dto.ScrapRequestDto;
-import MeoipZi.loginMeoipZi.service.HeartService;
 import MeoipZi.loginMeoipZi.service.ScrapService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +17,7 @@ public class ScrapController {
     private final ScrapService scrapService;
 
     @PostMapping(value = {"/outfits/{contentId}/scrap", "/products/{contentId}/scrap"})
-    public ResponseEntity<?> like(@PathVariable(name = "contentId") Long contentId, @RequestBody @Valid ScrapRequestDto scrapRequestDto) throws Exception {
+    public ResponseEntity<?> scrap(@PathVariable(name = "contentId") Long contentId, @RequestBody @Valid ScrapRequestDto scrapRequestDto) throws Exception {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         scrapRequestDto.setUsername(authentication.getName());

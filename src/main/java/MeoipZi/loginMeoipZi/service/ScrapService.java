@@ -33,6 +33,7 @@ public class ScrapService {
             if (scrapRepository.findByUserAndOutfit(user, outfit).isPresent()) {
                 Scrap scrap = scrapRepository.findByUserAndOutfit(user, outfit)
                         .orElseThrow(() -> new NotFoundContentException("Could not found scrap"));
+                scrapRepository.delete(scrap);
             } else {
                 Scrap scrap = Scrap.builder()
                         .user(user)
@@ -40,6 +41,7 @@ public class ScrapService {
                         .contentType(requestDto.getContentType())
                         .createdAt(LocalDateTime.now())
                         .build();
+                scrapRepository.save(scrap);
             }
         } else if (requestDto.getContentType().equals("product")) {
             Product product = productRepository.findById(requestDto.getContentId())
@@ -57,7 +59,6 @@ public class ScrapService {
                         .build();
                 scrapRepository.save(scrap);
             }
-
         }
         return ResponseEntity.ok(requestDto);
     }

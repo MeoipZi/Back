@@ -13,5 +13,4 @@ public class MyCommentsDto {
     private List<MyImageResponseDto> cmtOutfits;
     private List<MyImageResponseDto> cmtShortforms;
     private List<MyCommResponseDto> cmtComms;
-    private List<MyCommResponseDto> cmtReplys;
 }

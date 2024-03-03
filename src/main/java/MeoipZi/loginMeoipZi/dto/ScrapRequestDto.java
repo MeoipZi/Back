@@ -15,6 +15,7 @@ public class ScrapRequestDto {
         this.username = name;
     }
     public void setContentId(Long id){
+
         this.contentId = id;
     }
 }
