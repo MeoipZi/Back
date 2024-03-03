@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import meoipzi.meoipzi.comment.domain.CommentCommunity;
+import meoipzi.meoipzi.heart.domain.Heart;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class Community {
     String category;
 
     @OneToMany(mappedBy = "community")
-    private List<Like> likes = new ArrayList<>();
+    private List<Heart> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "community")
     private List<CommentCommunity> commentCommunities = new ArrayList<>();

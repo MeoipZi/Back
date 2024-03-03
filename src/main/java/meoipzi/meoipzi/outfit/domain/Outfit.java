@@ -3,11 +3,10 @@ package meoipzi.meoipzi.outfit.domain;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import jakarta.persistence.*;
 import lombok.*;
-import meoipzi.meoipzi.domain.CommentOutfit;
-import meoipzi.meoipzi.domain.Like;
+import meoipzi.meoipzi.comment.domain.CommentOutfit;
+import meoipzi.meoipzi.heart.domain.Heart;
 import meoipzi.meoipzi.login.domain.User;
 import meoipzi.meoipzi.product.domain.Product;
-import org.hibernate.annotations.Cascade;
 
 
 import java.util.ArrayList;
@@ -33,11 +32,14 @@ public class Outfit {
     private String modelInstagramId;
     private String modelGender;
 
+    private int likesCount; //이거 추가
+    private int commentCounts; //이거 추가
+
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name="user_id")
     private User user;
 
     @OneToMany(mappedBy = "outfit")
-    private List<Like> likes = new ArrayList<>();
+    private List<Heart> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "outfit")
     private List<CommentOutfit> commentOutfits = new ArrayList<>();

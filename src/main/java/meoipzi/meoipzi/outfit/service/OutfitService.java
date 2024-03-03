@@ -9,17 +9,23 @@ import meoipzi.meoipzi.login.repository.UserRepository;
 import meoipzi.meoipzi.outfit.domain.Outfit;
 import meoipzi.meoipzi.outfit.dto.OutfitRequestDTO;
 import meoipzi.meoipzi.outfit.dto.OutfitResponseDTO;
+import meoipzi.meoipzi.outfit.dto.OutfitTotalResponseDTO;
 import meoipzi.meoipzi.outfit.dto.OutfitUpdateRequestDTO;
 import meoipzi.meoipzi.product.dto.ProductListResponseDTO;
 import meoipzi.meoipzi.outfit.repository.OutfitRepository;
 import meoipzi.meoipzi.product.service.ProductService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -30,6 +36,7 @@ public class OutfitService {
     private final S3Config s3Config;
 
     private final ProductService productService;
+
     //코디 등록
     @Transactional
     public ResponseEntity<?> saveOutfit(OutfitRequestDTO outfitRequestDTO) throws Exception{
@@ -87,5 +94,35 @@ public class OutfitService {
 
         return outfitResponseDTO;
     }
+
+
+    public Page<OutfitTotalResponseDTO> getLatestOutfits(Pageable pageable) {
+        try {
+            Page<Outfit> outfitsPage = outfitRepository.findAllByOrderByIdDesc(pageable);
+            List<OutfitTotalResponseDTO> outfitDTOs = outfitsPage.stream()
+                    .map(OutfitTotalResponseDTO::new)
+                    .collect(Collectors.toList());
+            return new PageImpl<>(outfitDTOs, pageable, outfitDTOs.size());
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 예외 처리 또는 로깅을 통한 추가 조사
+            return new PageImpl<>(Collections.emptyList());
+        }
+    }
+
+    public Page<OutfitTotalResponseDTO> getPopularOutfits(Pageable pageable){
+        try {
+            Page<Outfit> outfitsPage= outfitRepository.findByOrderByLikesCountDesc(pageable);
+            List<OutfitTotalResponseDTO> outfitDTOs = outfitsPage.stream()
+                    .map(OutfitTotalResponseDTO::new)
+                    .collect(Collectors.toList());
+            return new PageImpl<>(outfitDTOs, pageable, outfitsPage.getTotalElements());
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 예외 처리 또는 로깅을 통한 추가 조사
+            return new PageImpl<>(Collections.emptyList());
+        }
+    }
+
 
 }

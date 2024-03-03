@@ -3,6 +3,7 @@ package meoipzi.meoipzi.comment.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import meoipzi.meoipzi.domain.Community;
+import meoipzi.meoipzi.login.domain.User;
 //import meoipzi.meoipzi.domain.User;
 
 import java.time.LocalDateTime;
@@ -25,23 +26,26 @@ public class CommentCommunity {
     String content;
     LocalDateTime createDateTime;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "parent_id")
-    private CommentCommunity parent;
 
-    @OneToMany(mappedBy = "parent", orphanRemoval = true)
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "parent_id")
+    private CommentCommunity parentComment;//부모 댓글 나타내는 필드
+
+    @OneToMany(mappedBy = "parentComment")
     private List<CommentCommunity> children = new ArrayList<>();
 
 
 
-    //@ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name="user_id")
-    //private User user;
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name="user_id")
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name="community_id")
     private Community community;
 
     @Builder
-    public CommentCommunity(String content, LocalDateTime createDateTime){
+    public CommentCommunity(String content, LocalDateTime createDateTime,User user, Community community){
         this.content = content;
         this.createDateTime = createDateTime;
+        this.user = user;
+        this.community = community;
     }
 }

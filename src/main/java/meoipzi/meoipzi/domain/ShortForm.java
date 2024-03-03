@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import meoipzi.meoipzi.comment.domain.CommentShortForm;
+import meoipzi.meoipzi.heart.domain.Heart;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,8 +29,11 @@ public class ShortForm {
     private LocalDateTime createDateTime;
     private LocalDateTime updateDatetime;
 
+    private int likesCount; //이거 추가
+    private int commentCounts; //이거 추가
+
     @OneToMany(mappedBy = "shortForm")
-    private List<Like> likes = new ArrayList<>();
+    private List<Heart> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "shortForm")
     private List<CommentShortForm> commentShortForms = new ArrayList<>();

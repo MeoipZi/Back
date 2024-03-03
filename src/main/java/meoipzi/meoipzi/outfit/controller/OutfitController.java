@@ -4,15 +4,26 @@ import lombok.RequiredArgsConstructor;
 import meoipzi.meoipzi.login.domain.User;
 import meoipzi.meoipzi.login.repository.UserRepository;
 import meoipzi.meoipzi.login.service.UserService;
+import meoipzi.meoipzi.outfit.domain.Outfit;
 import meoipzi.meoipzi.outfit.dto.OutfitRequestDTO;
 import meoipzi.meoipzi.outfit.dto.OutfitResponseDTO;
+import meoipzi.meoipzi.outfit.dto.OutfitTotalResponseDTO;
 import meoipzi.meoipzi.outfit.dto.OutfitUpdateRequestDTO;
 import meoipzi.meoipzi.outfit.service.OutfitService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,7 +53,7 @@ public class OutfitController {
         outfitUpdateRequestDTO.setUsername(authentication.getName());
         return outfitService.updateOutfit(outfitId, outfitUpdateRequestDTO);
     }
-    //코디 삭제하기 필요한가? -> product랑 연결땜에 안됨..ㅜㅜ
+    //코디 삭제하기 필요한가? -> product랑 연결땜에 안됨
 
     // [사진 클릭 부분] 1개 코디와 3개의 상품 조회 - 로그인여부랑 상관없음
     @GetMapping("/outfits/{outfitId}")
@@ -54,6 +65,39 @@ public class OutfitController {
             return new ResponseEntity<>("Failed to retrieve outfit", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    // [전체 조회 2*10 123-- 페이지네이션] 기본적으로: -[좋아요순==인기순 조회] 좋아요 개수가 같으면 최신순으로 초회됨
+    @GetMapping("/outfits/popular")
+    public ResponseEntity<?> getPopularOutfits(@RequestParam(value = "page")int page, @RequestParam(value = "size") int size){
+        Pageable pageable = PageRequest.of(page,size);
+        Page<OutfitTotalResponseDTO> popularOutfitsPage = outfitService.getPopularOutfits(pageable);
+
+        List<List<String>> outfitsGrid = partitionIntoRows(popularOutfitsPage.getContent().stream().map(OutfitTotalResponseDTO::getImgUrl).collect(Collectors.toList()), 2);
+        return ResponseEntity.ok(outfitsGrid);
+    }
+
+
+
+    //[최신순 조회]
+    //http://localhost:8080/outfits/latest?page=0&size=20
+    @GetMapping("/outfits/latest")
+    public ResponseEntity<?> getLatestOutfits(@RequestParam(value = "page") int page, @RequestParam(value = "size") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<OutfitTotalResponseDTO> latestOutfitsPage = outfitService.getLatestOutfits(pageable);
+
+        List<List<String>> outfitsGrid = partitionIntoRows(latestOutfitsPage.getContent().stream().map(OutfitTotalResponseDTO::getImgUrl).collect(Collectors.toList()), 2);
+        return ResponseEntity.ok(outfitsGrid);
+    }
+
+
+    private List<List<String>> partitionIntoRows(List<String> list, int elementsPerRow) {
+        List<List<String>> rows = new ArrayList<>();
+        for (int i = 0; i < list.size(); i += elementsPerRow) {
+            int end = Math.min(i + elementsPerRow, list.size());
+            rows.add(list.subList(i, end));
+        }
+        return rows;
     }
 
 }
