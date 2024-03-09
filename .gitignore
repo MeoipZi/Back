@@ -1,5 +1,4 @@
 HELP.md
-Meoipzi.mv.db
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -37,6 +36,5 @@ out/
 ### VS Code ###
 .vscode/
 
-# Ignore application.yml
-application.yml
-ion.yml
+### Secret Key ###
+application-secret.yml
