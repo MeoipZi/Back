@@ -1,4 +1,5 @@
 HELP.md
+Meoipzi.mv.db
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -36,5 +37,6 @@ out/
 ### VS Code ###
 .vscode/
 
-### application.yml
+# Ignore application.yml
 application.yml
+ion.yml
