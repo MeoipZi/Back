@@ -1,6 +1,7 @@
 package MeoipZi.loginMeoipZi.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,6 +26,15 @@ public class CommentShortForm {
     @JoinColumn(name="shortform_id")
     private ShortForm shortForm;
 
-    private String contents;
+    private String content;
     private LocalDateTime createdAt;
+
+    @Builder
+    public CommentShortForm(String content, LocalDateTime createDateTime, User user, ShortForm shortForm){
+        this.content = content;
+        this.createdAt = createDateTime;
+        this.user = user;
+        this.shortForm = shortForm;
+    }
+
 }

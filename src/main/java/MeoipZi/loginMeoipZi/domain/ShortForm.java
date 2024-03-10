@@ -33,6 +33,8 @@ public class ShortForm {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private int likesCount;
+    private int commentCounts;
+
 
     @OneToMany(mappedBy = "shortForm", cascade = CascadeType.ALL)
     private List<Heart> shortformLikes = new ArrayList<>();

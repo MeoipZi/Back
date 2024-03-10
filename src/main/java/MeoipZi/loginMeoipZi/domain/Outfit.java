@@ -1,5 +1,6 @@
 package MeoipZi.loginMeoipZi.domain;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @Table(name = "OUTFIT")
 @NoArgsConstructor
 //@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Outfit {
 
     @Id
@@ -27,7 +29,7 @@ public class Outfit {
     private String modelGender;
 
     private int likesCount;
-
+    private int commentCounts;
 
     @OneToMany(mappedBy = "outfit")
     private List<Heart> likes = new ArrayList<>();

@@ -1,11 +1,11 @@
 package MeoipZi.loginMeoipZi.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,13 +28,21 @@ public class CommentCommunity {
     private Community community;
 
     @ManyToOne
-    @JoinColumn(name="parent_cmt_id")
-    private CommentCommunity parentCmt;
+    @JoinColumn(name="parent_id")
+    private CommentCommunity parentComment;
 
-    @OneToMany(mappedBy="parentCmt")
-    private List<CommentCommunity> childComments;
+    @OneToMany(mappedBy="parentComment")
+    private List<CommentCommunity> children;
 
-    private String contents; //comment로 바꾸고 싶다...
+    private String content; //comment로 바꾸고 싶다...
     private LocalDateTime createdAt;
+
+    @Builder
+    public CommentCommunity(String content, LocalDateTime createdAt,User user, Community community){
+        this.content = content;
+        this.createdAt = createdAt;
+        this.user = user;
+        this.community = community;
+    }
 
 }
