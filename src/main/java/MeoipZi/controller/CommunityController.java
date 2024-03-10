@@ -29,14 +29,14 @@ public class CommunityController {
     private final S3Config s3Config;
 
     /* 커뮤니티 게시글 리스트 보기 -> 최신순 조회 */
-    // /communities?category=brand/latest?page=0&size=20
-    @GetMapping("?category={category}/latest")
-    public ResponseEntity<?> getLatestListPerCategory(@RequestBody @PathVariable CommunityListRequestDTO communityListRequestDTO,
+    // /communities/latest?category=brand&page=0&size=20
+    @GetMapping("/latest")
+    public ResponseEntity<?> getLatestListPerCategory(@RequestParam(value = "category") String category,
                                                                    @RequestParam(value = "page")int page,
                                                                    @RequestParam(value = "size") int size){
         Pageable pageable = PageRequest.of(page, size);
         // 조회된 커뮤니티 글 리스트 형식 반환
-        Page<CommunityListResponseDTO> latestCommunityPage = communityService.getLatestCommunityList(communityListRequestDTO, pageable);
+        Page<CommunityListResponseDTO> latestCommunityPage = communityService.getLatestCommunityList(category, pageable);
 
         List<List<String>> communityGrid = partitionIntoRows(latestCommunityPage.getContent().
                 stream()
@@ -46,14 +46,14 @@ public class CommunityController {
     }
 
     /* 커뮤니티 게시글 리스트 보기 -> 좋아요순 조회 */
-    // /communities?category=brand/popular?page=0&size=20
-    @GetMapping("?category={category}/popular")
-    public ResponseEntity<?> getPopularListPerCategory(@RequestBody @PathVariable  CommunityListRequestDTO communityListRequestDTO,
+    // /communities/popular?category=brand&page=0&size=20
+    @GetMapping("/popular")
+    public ResponseEntity<?> getPopularListPerCategory(@RequestParam(value = "category") String category,
                                                       @RequestParam(value = "page")int page,
                                                       @RequestParam(value = "size") int size){
         Pageable pageable = PageRequest.of(page, size);
         // 조회된 커뮤니티 글 리스트 형식 반환
-        Page<CommunityListResponseDTO> latestCommunityPage = communityService.getPopularCommunintyList(communityListRequestDTO, pageable);
+        Page<CommunityListResponseDTO> latestCommunityPage = communityService.getPopularCommunintyList(category, pageable);
 
         List<List<String>> communityGrid = partitionIntoRows(latestCommunityPage.getContent().
                 stream()

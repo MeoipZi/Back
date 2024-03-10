@@ -1,5 +1,6 @@
 package MeoipZi.dto.ShortformDto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -10,8 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class ShortformUpdateRequestDTO {
     private String userName;
-
     private String title;
     private String contents;
+
+    @JsonIgnore
     private MultipartFile imgUrl;
 }

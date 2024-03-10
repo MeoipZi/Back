@@ -24,20 +24,10 @@ public class ProfileController {
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
 
-    // 초기 프로필 설정
+    // 회원가입 직후 초기 프로필 설정 -> 로그인 안된 상태에서도 가능하게 해야 함
     @PostMapping("/settings")
     public ResponseEntity<?> setProfile(ProfileRegisterRequestDto profileRegisterRequestDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        profileRegisterRequestDto.setUserName(authentication.getName());
-
-        if(authentication.isAuthenticated()){
-            try {
-                return profileService.registerProfile(profileRegisterRequestDto);
-            } catch(Exception e) {
-                return new ResponseEntity<>("프로필 설정에 오류가 발생하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
-        return new ResponseEntity<>("접근 권한이 없습니다.", HttpStatus.FORBIDDEN);
+        return profileService.registerProfile(profileRegisterRequestDto);
     }
 
     // 프로필 조회

@@ -36,9 +36,9 @@ public class CommunityService {
     private final UserRepository userRepository;
 
     // 커뮤니티 게시글 카테고리별, 최신순 정렬 조회
-    public Page<CommunityListResponseDTO> getLatestCommunityList(CommunityListRequestDTO communityListRequestDTO, Pageable pageable){
+    public Page<CommunityListResponseDTO> getLatestCommunityList(String category, Pageable pageable){
         try {
-            Page<Community> communityPage = communityRepository.findAllByCategoryOrderByIdDesc(communityListRequestDTO.getCategory(), pageable);
+            Page<Community> communityPage = communityRepository.findAllByCategoryOrderByIdDesc(category, pageable);
             List<CommunityListResponseDTO> communityListResponseDTOS = communityPage.stream()
                     .map(CommunityListResponseDTO::new)
                     .collect(Collectors.toList());
@@ -50,9 +50,9 @@ public class CommunityService {
     }
 
     // 커뮤니티 게시글 카테고리별, 좋아요순 정렬 조회
-    public Page<CommunityListResponseDTO> getPopularCommunintyList(CommunityListRequestDTO communityListRequestDTO, Pageable pageable){
+    public Page<CommunityListResponseDTO> getPopularCommunintyList(String category, Pageable pageable){
         try {
-            Page<Community> communityPage = communityRepository.findAllByCategoryOrderByLikesCount(communityListRequestDTO.getCategory(), pageable);
+            Page<Community> communityPage = communityRepository.findAllByCategoryOrderByLikesCount(category, pageable);
             List<CommunityListResponseDTO> communityListResponseDTOS = communityPage.stream()
                     .map(CommunityListResponseDTO::new)
                     .collect(Collectors.toList());

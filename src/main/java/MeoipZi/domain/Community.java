@@ -63,11 +63,4 @@ public class Community extends BaseEntity {
         this.createdAt = getCreatedAt();
         this.formattedCreatedAt = getFormattedCreatedAt();
     }
-
-    // 엔티티 수정 메서드
-    public void update(String title, String contents, String imgUrl) {
-        this.title = title;
-        this.contents = contents;
-        this.imgUrl = imgUrl;
-    }
 }

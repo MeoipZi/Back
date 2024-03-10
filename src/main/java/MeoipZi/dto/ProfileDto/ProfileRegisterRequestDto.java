@@ -1,7 +1,10 @@
 package MeoipZi.dto.ProfileDto;
 
 import MeoipZi.domain.Profile;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,10 +12,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class ProfileRegisterRequestDto {
     private String userName;    // 유저 Id
-
+    @JsonIgnore
     private MultipartFile imgUrl;  // 프로필 사진
     private Integer height;  // 신장
     private boolean heightSecret; // 신장 공개 여부

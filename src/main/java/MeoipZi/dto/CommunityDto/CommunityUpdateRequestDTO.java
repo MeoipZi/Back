@@ -1,5 +1,6 @@
 package MeoipZi.dto.CommunityDto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ public class CommunityUpdateRequestDTO {
 
     private String title; // 제목
     private String contents; // 내용
+    @JsonIgnore
     private MultipartFile imgUrl; // 사진 첨부
     private String category; // 카테고리
 }
