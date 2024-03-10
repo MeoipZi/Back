@@ -39,7 +39,6 @@ public class ShortForm extends BaseEntity {
     private String imgUrl;
 
 
-    private int likesCount; //이거 추가
     private int commentCounts; //이거 추가
 
 

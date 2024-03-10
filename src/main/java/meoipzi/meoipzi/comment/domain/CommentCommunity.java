@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import meoipzi.meoipzi.community.domain.Community;
 import meoipzi.meoipzi.login.domain.User;
+import org.springframework.data.annotation.CreatedDate;
 //import meoipzi.meoipzi.domain.User;
 
 import java.time.LocalDateTime;
@@ -23,7 +24,9 @@ public class CommentCommunity {
 
     @Column(nullable = false, length = 1000)
     String content;
-    LocalDateTime createDateTime;
+    @Column(name = "created_at")
+    @CreatedDate
+    private LocalDateTime createdAt;
 
 
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "parent_id")
@@ -41,9 +44,9 @@ public class CommentCommunity {
     private Community community;
 
     @Builder
-    public CommentCommunity(String content, LocalDateTime createDateTime,User user, Community community){
+    public CommentCommunity(String content, LocalDateTime createdAt,User user, Community community){
         this.content = content;
-        this.createDateTime = createDateTime;
+        this.createdAt = createdAt;
         this.user = user;
         this.community = community;
     }

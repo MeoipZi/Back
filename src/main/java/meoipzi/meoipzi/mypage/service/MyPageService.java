@@ -70,7 +70,7 @@ public class MyPageService {
 
         if(!commList.isEmpty()) {
             for (Community comm : commList) {
-                MyCommResponseDto uploadedComm = new MyCommResponseDto(comm.getId(), comm.getTitle(), comm.getLikesCount(), comm.getCommentCounts(), comm.getCreatedAt());
+                MyCommResponseDto uploadedComm = new MyCommResponseDto(comm.getId(), comm.getTitle(), comm.getLikesCount(), comm.getCommentsCount(), comm.getCreatedAt());
                 uploadedComms.add(uploadedComm);
             }
         }
@@ -113,21 +113,21 @@ public class MyPageService {
         if(!cmtOutfitList.isEmpty()){
             for(CommentOutfit cmt: cmtOutfitList){
                 Outfit outfit = cmt.getOutfit();
-                MyImageResponseDto cmtOutfit = new MyImageResponseDto(outfit.getId(), outfit.getImgUrl(), cmt.getCreateDateTime());
+                MyImageResponseDto cmtOutfit = new MyImageResponseDto(outfit.getId(), outfit.getImgUrl(), cmt.getCreatedAt());
                 cmtOutfits.add(cmtOutfit);
             }
         }
         if(!cmtSFList.isEmpty()){
             for(CommentShortForm cmt: cmtSFList){
                 ShortForm shortForm = cmt.getShortForm();
-                MyImageResponseDto cmtShortForm = new MyImageResponseDto(shortForm.getId(), shortForm.getImgUrl(), cmt.getCreateDateTime());
+                MyImageResponseDto cmtShortForm = new MyImageResponseDto(shortForm.getId(), shortForm.getImgUrl(), cmt.getCreatedAt());
                 cmtShortForms.add(cmtShortForm);
             }
         }
         if(!cmtCommList.isEmpty()){
             for(CommentCommunity cmt: cmtCommList){
                 Community comm = cmt.getCommunity();
-                MyCommResponseDto cmtComm = new MyCommResponseDto(comm.getId(), comm.getTitle(), comm.getLikesCount(), comm.getCommentCounts(), cmt.getCreateDateTime());
+                MyCommResponseDto cmtComm = new MyCommResponseDto(comm.getId(), comm.getTitle(), comm.getLikesCount(), comm.getCommentsCount(), cmt.getCreatedAt());
                 cmtComms.add(cmtComm);
             }
         }
@@ -216,7 +216,7 @@ public class MyPageService {
         if(!commList.isEmpty()){
             for(Heart heart: commList){
                 Community comm = heart.getCommunity();
-                MyCommResponseDto likedComm = new MyCommResponseDto(comm.getId(), comm.getTitle(), comm.getLikesCount(), comm.getCommentCounts(), heart.getCreatedAt());
+                MyCommResponseDto likedComm = new MyCommResponseDto(comm.getId(), comm.getTitle(), comm.getLikesCount(), comm.getCommentsCount(), heart.getCreatedAt());
                 likedComms.add(likedComm);
             }
         }

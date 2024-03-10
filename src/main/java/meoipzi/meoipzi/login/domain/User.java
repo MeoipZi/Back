@@ -8,6 +8,8 @@ import meoipzi.meoipzi.comment.domain.CommentShortForm;
 import meoipzi.meoipzi.heart.domain.Heart;
 import meoipzi.meoipzi.outfit.domain.Outfit;
 import meoipzi.meoipzi.product.domain.Product;
+import meoipzi.meoipzi.profile.domain.Profile;
+import meoipzi.meoipzi.scrap.domain.Scrap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,13 +54,16 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
     private Set<Authority> authorities;
 
-// 이 브랜치의 domain에 heart, scrap, commentCommunity, commentoutfit, commentshortform을 안 넣어놔서 주석처리함.
     @OneToMany(mappedBy = "user")
     private List<Heart> likes = new ArrayList<>();
-//
-  //  @OneToMany(mappedBy = "user")
-//    private List<Scrap> scraps = new ArrayList<>();
-//
+
+   @OneToMany(mappedBy = "user")
+    private List<Scrap> scraps = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_id")
+    private Profile profile;
+
     @OneToMany(mappedBy = "user")
     private List<CommentCommunity> commentCommunities = new ArrayList<>();
 

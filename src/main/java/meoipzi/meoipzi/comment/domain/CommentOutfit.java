@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import meoipzi.meoipzi.login.domain.User;
 import meoipzi.meoipzi.outfit.domain.Outfit;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
@@ -21,7 +22,9 @@ public class CommentOutfit {
     @Column(name="comment_outfit_id")
     private Long id;
     private String content;
-    LocalDateTime createDateTime;
+    @Column(name = "created_at")
+    @CreatedDate
+    private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name="user_id")
     private User user;
@@ -31,9 +34,9 @@ public class CommentOutfit {
 
 
     @Builder
-    public CommentOutfit(String content, LocalDateTime createDateTime, User user,Outfit outfit){
+    public CommentOutfit(String content, LocalDateTime createdAt, User user,Outfit outfit){
         this.content = content;
-        this.createDateTime = createDateTime;
+        this.createdAt = createdAt;
         this.user = user;
         this.outfit = outfit;
     }

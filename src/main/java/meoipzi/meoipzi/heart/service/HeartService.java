@@ -45,7 +45,7 @@ public class HeartService {
                     Heart heart = heartRepository.findByUserAndShortForm(user, shortform)
                             .orElseThrow(() -> new NotFoundContentException("Could not found heart"));
                     heartRepository.delete(heart);
-                    shortform.setLikesCount(shortform.getLikesCount() - 1);
+                    shortform.setLikes_count(shortform.getLikes_count() - 1);
                 } else {
                     Heart sfheart = Heart.builder()
                             .user(user)
@@ -54,7 +54,7 @@ public class HeartService {
                             .createdAt(LocalDateTime.now())
                             .build();
                     heartRepository.save(sfheart);
-                    shortform.setLikesCount(shortform.getLikesCount() + 1);
+                    shortform.setLikes_count(shortform.getLikes_count() + 1);
                 }
             }
             case "community" -> {
