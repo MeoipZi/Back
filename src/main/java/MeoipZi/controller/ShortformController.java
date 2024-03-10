@@ -1,0 +1,130 @@
+package MeoipZi.controller;
+
+import MeoipZi.dto.ShortformDto.ShortformListResponseDTO;
+import MeoipZi.dto.ShortformDto.ShortformRequestDTO;
+import MeoipZi.dto.ShortformDto.ShortformResponseDTO;
+import MeoipZi.dto.ShortformDto.ShortformUpdateRequestDTO;
+import MeoipZi.repository.ShortformRepository;
+import MeoipZi.service.ShortformService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Controller
+@RequiredArgsConstructor
+@RequestMapping("/shortforms")
+public class ShortformController {
+    private ShortformRepository shortformRepository;
+    private final ShortformService shortformService;
+
+    /* 숏폼 게시글 리스트 보기 */
+    // -> 좋아요순 조회
+    @GetMapping("/popular")
+    public ResponseEntity<?> getPopularShortformList(@RequestParam(value = "page") int page,
+                                                                           @RequestParam(value = "size") int size){
+        Pageable pageable = PageRequest.of(page,size);
+        Page<ShortformListResponseDTO> popularShortformPage = shortformService.getPopularShortformList(pageable);
+
+        List<List<String>> shortformsGrid = partitionIntoRows(popularShortformPage.getContent()
+                .stream()
+                .map(ShortformListResponseDTO::getImgUrl)
+                .collect(Collectors.toList()), 2);
+        return ResponseEntity.ok(shortformsGrid);
+    }
+
+    // 최신순 조회
+    @GetMapping("/latest")
+    public ResponseEntity<?> getLatestShortformList(@RequestParam(value = "page") int page,
+                                              @RequestParam(value = "size") int size){
+        Pageable pageable = PageRequest.of(page,size);
+        Page<ShortformListResponseDTO> popularShortformPage = shortformService.getLatestShortformList(pageable);
+
+        List<List<String>> shortformsGrid = partitionIntoRows(popularShortformPage.getContent()
+                .stream()
+                .map(ShortformListResponseDTO::getImgUrl)
+                .collect(Collectors.toList()), 2);
+        return ResponseEntity.ok(shortformsGrid);
+    }
+
+    /* 숏폼 게시글 하나 상세 조회 */
+    @GetMapping("/{shortformId}")
+    public ResponseEntity<?> getOneShortform(@PathVariable Long shortformId) {
+        try {
+            ShortformResponseDTO shortformResponseDTO = shortformService.viewShortform(shortformId);
+            return new ResponseEntity<>(shortformResponseDTO, HttpStatus.OK);
+        } catch (Exception e) {
+           return new ResponseEntity<>("알 수 없는 오류가 발생하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /* 숏폼 글 등록 */
+    @PostMapping("")
+    public ResponseEntity<?> createShortform(ShortformRequestDTO shortformRequestDTO){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(authentication.isAuthenticated()) {
+            try {
+                shortformService.saveShortform(shortformRequestDTO);
+                return new ResponseEntity<>("숏폼 등록에 성공하였습니다.", HttpStatus.OK);
+            } catch(Exception e) {
+                return new ResponseEntity<>("숏폼 등록에 실패하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        else return new ResponseEntity<>("접근 권한이 없습니다.", HttpStatus.FORBIDDEN);
+    }
+
+    /* 숏폼 글 삭제 */
+    @DeleteMapping("/{shortformId}")
+    public ResponseEntity<?> deleteShortform(@PathVariable Long shortformId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(authentication.isAuthenticated()){
+            try {
+                shortformService.deleteShortform(shortformId);
+                return new ResponseEntity<>("숏폼이 삭제에 성공하였습니다.", HttpStatus.OK);
+            } catch (Exception e) {
+                return new ResponseEntity<>("숏폼 삭제 중에 오류가 발생하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        else return new ResponseEntity<>("접근 권한이 없습니다.", HttpStatus.FORBIDDEN);
+    }
+
+/* 숏폼 글 수정 */
+    @PatchMapping("/{shortformId}")
+    public ResponseEntity<?> updateShortform(@PathVariable Long shortformId, ShortformUpdateRequestDTO shortformUpdateRequestDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        shortformUpdateRequestDTO.setUserName(authentication.getName());
+
+        if(authentication.isAuthenticated()){
+            try {
+                return shortformService.updateShortform(shortformId, shortformUpdateRequestDTO);
+            } catch (Exception e) {
+                return new ResponseEntity<>("게시글 수정에 실패하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        else {
+            return new ResponseEntity<>("접근 권한이 없습니다.", HttpStatus.FORBIDDEN);
+        }
+    }
+
+    private List<List<String>> partitionIntoRows(List<String> list, int elementsPerRow) {
+        List<List<String>> rows = new ArrayList<>();
+        for (int i = 0; i < list.size(); i += elementsPerRow) {
+            int end = Math.min(i + elementsPerRow, list.size());
+            rows.add(list.subList(i, end));
+        }
+        return rows;
+    }
+}
+
