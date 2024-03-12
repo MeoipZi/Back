@@ -42,7 +42,7 @@ public class ShortForm extends BaseEntity {
     @Column(name = "COMMENTS_COUNT")
     private int commentsCount;
 
-    @Column(name = "IMAGE_URL")
+    @Column(name = "IMG_URL")
     @NotEmpty @NotNull
     private String imgUrl; // 숏폼 게시글 imgUrl
 

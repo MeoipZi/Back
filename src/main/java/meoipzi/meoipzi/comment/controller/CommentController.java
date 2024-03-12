@@ -25,7 +25,7 @@ public class CommentController {
 
 
     //코디 댓글 생성 - 로그인된 사용자가 접근
-    @PostMapping("/cmtoutfits/{outfitId}")
+    @PostMapping("/outfits/{outfitId}/comments")
     public ResponseEntity<?> saveCommentOutfit(@PathVariable("outfitId") Long outfitId, CommentOutfitRequestDTO commentOutfitRequestDTO) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         commentOutfitRequestDTO.setUsername(authentication.getName());
@@ -33,7 +33,7 @@ public class CommentController {
     }
 
     //코디 댓글 삭제 - 로그인된 사용자가 자신이 적은 글에만 접근
-    @DeleteMapping("/cmtoutfits/{commentId}")
+    @DeleteMapping("/outfits/{outfitId}/comments/{commentId}")
     public ResponseEntity<?> deleteCommentOutfit(@PathVariable("commentId") Long commentId) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
@@ -41,7 +41,7 @@ public class CommentController {
     }
 
     //코디 댓글 수정 = 로그인된 사용자가 자신이 적은 글에만 접근
-    @PutMapping("/cmtoutfits/{commentId}")
+    @PutMapping("/outfits/{outfitId}/comments/{commentId}")
     public ResponseEntity<?> updateCommentOutfit(@PathVariable("commentId")Long commentId, CommentOutfitRequestDTO updateCommentDTO) throws  Exception{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         updateCommentDTO.setUsername(authentication.getName());
@@ -49,7 +49,7 @@ public class CommentController {
     }
 
     //코디 댓글 조회 - 닉네임(이메일)이랑 댓글내용 나오게 [로그인 여부와 관계 없음]
-    @GetMapping("/cmtoutfits/{outfitId}")
+    @GetMapping("/outfits/{outfitId}/comments")
     public ResponseEntity<?> getCommentsByOutfitId(@PathVariable("outfitId")Long outfitId){
         List<CommentOutfitResponseDTO> commentOutfitResponseDTOList = commentOutfitService.getCommentsByOutfitId(outfitId);
         return ResponseEntity.ok(commentOutfitResponseDTOList);
@@ -59,7 +59,7 @@ public class CommentController {
 
 
     //숏폼 댓글 생성 - 로그인된 사용자가 접근
-    @PostMapping("/cmtshortforms/{shortformId}")
+    @PostMapping("/shortforms/{shortformId}/comments")
     public ResponseEntity<?> saveCommentShortForm(@PathVariable("shortformId") Long shortformId, CommentShortFormRequestDTO commentShortFormRequestDTO) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         commentShortFormRequestDTO.setUsername(authentication.getName());
@@ -67,7 +67,7 @@ public class CommentController {
     }
 
     //숏폼 댓글 삭제 - 로그인된 사용자가 자신이 적은 글에만 접근
-    @DeleteMapping("/cmtshortforms/{commentId}")
+    @DeleteMapping("/shortforms/{shortformId}/comments/{commentId}")
     public ResponseEntity<?> deleteCommentShortForm(@PathVariable("commentId") Long commentId) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
@@ -75,7 +75,7 @@ public class CommentController {
     }
 
     //숏폼 댓글 수정 = 로그인된 사용자가 자신이 적은 글에만 접근
-    @PutMapping("/cmtshortforms/{commentId}")
+    @PutMapping("/shortforms/{shortformId}/comments/{commentId}")
     public ResponseEntity<?> updateCommentShortForm(@PathVariable("commentId")Long commentId, CommentShortFormRequestDTO updateCommentDTO) throws  Exception{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         updateCommentDTO.setUsername(authentication.getName());
@@ -83,7 +83,7 @@ public class CommentController {
     }
 
     //숏폼 댓글 조회 - 닉네임(이메일)이랑 댓글내용 나오게  [로그인 여부와 관계 없음]
-    @GetMapping("/cmtshortforms/{shortformId}")
+    @GetMapping("/shortforms/{shortformId}/comments")
     public ResponseEntity<?> getCommentsByShortformId(@PathVariable("shortformId")Long shortformId){
         List<CommentShortFormResponseDTO> commentShortFormResponseDTOList = commentShortFormService.getCommentsByShortformId(shortformId);
         return ResponseEntity.ok(commentShortFormResponseDTOList);
@@ -107,7 +107,7 @@ public class CommentController {
 
 
     //커뮤니티 댓글 + 대댓글 생성 - 로그인된 사용자가 접근
-    @PostMapping("/cmtCommunity/{communityId}")
+    @PostMapping("/communities/{communityId}/comments")
     public ResponseEntity<?> saveCommentCommunity(@PathVariable("communityId") Long communityId, CommentCommunityRecDTO commentCommunityRecDTO) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         commentCommunityRecDTO.setUsername(authentication.getName());
@@ -116,7 +116,7 @@ public class CommentController {
 
 
     //커뮤니티 대댓글 생성 -로그인된 사용자가 접근
-    @PostMapping("/replyCommunity/{communityId}")
+    @PostMapping("/communities/{communityId}/replies")
     public ResponseEntity<?> saveReplyCommunity(@PathVariable("communityId") Long communityId, CommentReplyRecDTO commentReplyRecDTO) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         commentReplyRecDTO.setUsername(authentication.getName());
@@ -124,7 +124,7 @@ public class CommentController {
     }
 
     //커뮤니티 댓글 삭제 - 로그인된 사용자가 접근
-    @DeleteMapping("/cmtCommunity/{commentId}")
+    @DeleteMapping("/communities/{communityId}/comments/{commentId}")
     public ResponseEntity<?> deleteCommentCommunity(@PathVariable("commentId") Long commentId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try {
@@ -136,7 +136,7 @@ public class CommentController {
     }
 
     // 커뮤니티 대댓글 삭제 - 로그인된 사용자가 접근
-    @DeleteMapping("/replyCommunity/{commentId}")
+    @DeleteMapping("/communities/{communityId}/replies/{commentId}")
     public ResponseEntity<?> deleteReplyCommunity(@PathVariable("commentId") Long commentId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try {

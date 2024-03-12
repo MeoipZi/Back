@@ -30,7 +30,7 @@ public class CommunityResponseDTO {
 
     public CommunityResponseDTO(Community community, List<CommentCommunity> comments) {
         this.communityId = community.getId();
-        this.userName = (!community.isAnonymous())? community.getUser().getNickname() : "익명";
+        this.userName = (!community.isAnonymous())? community.getUser().getProfile().getNickname() : "익명";
         this.profileImg = community.getUser().getProfile().getImgUrl(); // 프로필 이미지 랜딩하기
         this.createdAt = community.getCreatedAt();
         this.title = community.getTitle();

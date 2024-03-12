@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@Table(name = "commentShortForms")
+@Table(name = "CMTSHORTFORM")
 @NoArgsConstructor
 public class CommentShortForm {
     @GeneratedValue
@@ -29,7 +29,7 @@ public class CommentShortForm {
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name="user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name="shortForm_id")
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name="shortform_id")
     private ShortForm shortForm;
 
     @Builder

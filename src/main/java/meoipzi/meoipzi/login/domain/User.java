@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "`USERS`")
+@Table(name = "USERS")
 @Getter @Setter
 @Builder
 @AllArgsConstructor
@@ -37,9 +37,6 @@ public class User {
 
     @Column(name = "activated")
     private boolean activated;
-
-    @Column(name = "nickname")
-    private String nickname;
 
     @OneToMany(mappedBy = "user")
     private List<Outfit> outfitList = new ArrayList<>();

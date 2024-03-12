@@ -66,7 +66,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers("/api/home", "/api/authenticate", "/api/signup").permitAll() //원래 토큰이 없는 상태에서 시도하므로
-                        .requestMatchers(PathRequest.toH2Console()).permitAll()
+                    //    .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .anyRequest().authenticated()
                 )
 

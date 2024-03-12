@@ -14,7 +14,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "commentCommunities")
+@Table(name = "CMTCOMM")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommentCommunity {
     @GeneratedValue

@@ -9,13 +9,14 @@ import meoipzi.meoipzi.login.domain.User;
 import meoipzi.meoipzi.product.domain.Product;
 
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "outfits")
+@Table(name = "OUTFIT")
 @NoArgsConstructor
 //@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
@@ -31,6 +32,10 @@ public class Outfit {
     private Long modelWeight;
     private String modelInstagramId;
     private String modelGender;
+
+    //0312 시간 넣기!!!!!!
+    private LocalDateTime createdAt;
+
 
     private int likesCount; //이거 추가
     private int commentCounts; //이거 추가

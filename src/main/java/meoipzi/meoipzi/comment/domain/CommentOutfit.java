@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@Table(name = "commentOutfits")
+@Table(name = "CMTOUTFIT")
 @NoArgsConstructor
 public class CommentOutfit {
     @GeneratedValue

@@ -13,7 +13,7 @@ import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/mypage")
+@RequestMapping("/mypage")
 public class MyPageController {
 
     private final MyPageService myPageService;

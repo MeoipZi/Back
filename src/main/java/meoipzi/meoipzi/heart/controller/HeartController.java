@@ -17,7 +17,7 @@ public class HeartController {
 
     private final HeartService heartService;
 
-    @PostMapping(value = {"/outfits/{contentId}/like", "/shortforms/{contentId}/like", "/community/{contentId}/like"})
+    @PostMapping(value = {"/outfits/{contentId}/like", "/shortforms/{contentId}/like", "/communities/{contentId}/like"})
     public ResponseEntity<?> like(@PathVariable(name = "contentId") Long contentId, @RequestBody @Valid HeartRequestDto heartRequestDto) throws Exception {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

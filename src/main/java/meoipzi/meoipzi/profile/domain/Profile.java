@@ -6,7 +6,7 @@ import meoipzi.meoipzi.login.domain.User;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
-@Table(name = "`PROFILE`")
+@Table(name = "PROFILE")
 @Getter
 @Setter
 @AllArgsConstructor
