@@ -6,7 +6,7 @@ import meoipzi.meoipzi.comment.domain.CommentCommunity;
 import meoipzi.meoipzi.comment.domain.CommentOutfit;
 import meoipzi.meoipzi.comment.domain.CommentShortForm;
 import meoipzi.meoipzi.heart.domain.Heart;
-import meoipzi.meoipzi.profile.outfit.domain.Outfit;
+import meoipzi.meoipzi.outfit.domain.Outfit;
 import meoipzi.meoipzi.product.domain.Product;
 import meoipzi.meoipzi.profile.domain.Profile;
 import meoipzi.meoipzi.scrap.domain.Scrap;

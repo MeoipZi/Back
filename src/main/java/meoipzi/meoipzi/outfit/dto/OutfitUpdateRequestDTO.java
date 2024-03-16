@@ -1,4 +1,4 @@
-package meoipzi.meoipzi.profile.outfit.dto;
+package meoipzi.meoipzi.outfit.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;

@@ -1,9 +1,9 @@
-package meoipzi.meoipzi.profile.outfit.dto;
+package meoipzi.meoipzi.outfit.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import meoipzi.meoipzi.profile.outfit.domain.Outfit;
+import meoipzi.meoipzi.outfit.domain.Outfit;
 
 @Getter
 @Setter

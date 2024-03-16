@@ -8,8 +8,8 @@ import meoipzi.meoipzi.comment.repository.CommentOutfitRepository;
 import meoipzi.meoipzi.common.excepiton.NotFoundMemberException;
 import meoipzi.meoipzi.login.domain.User;
 import meoipzi.meoipzi.login.repository.UserRepository;
-import meoipzi.meoipzi.profile.outfit.domain.Outfit;
-import meoipzi.meoipzi.profile.outfit.repository.OutfitRepository;
+import meoipzi.meoipzi.outfit.domain.Outfit;
+import meoipzi.meoipzi.outfit.repository.OutfitRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -39,7 +39,7 @@ public class CommentOutfitService {
         outfitRepository.save(outfit);
         //코디 댓글 생성
         CommentOutfit commentOutfit = commentOutfitRequestDTO.toEntity(user,outfit);
-        commentOutfit.setCreatedAt(commentOutfitRequestDTO.getCreatedAt());
+        //commentOutfit.setCreatedAt(commentOutfitRequestDTO.getCreatedAt());
         commentOutfitRepository.save(commentOutfit);
 
         return ResponseEntity.ok(commentOutfitRequestDTO);

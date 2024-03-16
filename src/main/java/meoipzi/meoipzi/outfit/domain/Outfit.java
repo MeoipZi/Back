@@ -1,9 +1,10 @@
-package meoipzi.meoipzi.profile.outfit.domain;
+package meoipzi.meoipzi.outfit.domain;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import jakarta.persistence.*;
 import lombok.*;
 import meoipzi.meoipzi.comment.domain.CommentOutfit;
+import meoipzi.meoipzi.common.BaseTimeEntity;
 import meoipzi.meoipzi.heart.domain.Heart;
 import meoipzi.meoipzi.login.domain.User;
 import meoipzi.meoipzi.product.domain.Product;
@@ -20,7 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 //@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class Outfit {
+public class Outfit extends BaseTimeEntity {
     @GeneratedValue
     @Id
     @Column(name="outfit_id")
@@ -28,14 +29,12 @@ public class Outfit {
 
     private String imgUrl;
     private String content;
-    private Long modelHeight;
-    private Long modelWeight;
-    private String modelInstagramId;
-    private String modelGender;
+    //private Long modelHeight;
+    //private Long modelWeight;
+    //private String modelInstagramId;
+    //private String modelGender;
 
     //0312 시간 넣기!!!!!!
-    private LocalDateTime createdAt;
-
 
     private int likesCount; //이거 추가
     private int commentCounts; //이거 추가
@@ -61,10 +60,10 @@ public class Outfit {
     public Outfit( String imgUrl, String content,  Long modelHeight,  Long modelWeight,String modelInstagramId, String modelGender, User user){
         this.imgUrl = imgUrl;
         this.content = content;
-        this.modelHeight = modelHeight;
-        this.modelWeight= modelWeight;
-        this.modelInstagramId =modelInstagramId;
-        this.modelGender = modelGender;
+        //this.modelHeight = modelHeight;
+        //this.modelWeight= modelWeight;
+        //this.modelInstagramId =modelInstagramId;
+        //this.modelGender = modelGender;
         this.user = user;
     }
 }

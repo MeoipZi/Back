@@ -1,9 +1,9 @@
-package meoipzi.meoipzi.profile.outfit.dto;
+package meoipzi.meoipzi.outfit.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import meoipzi.meoipzi.profile.outfit.domain.Outfit;
+import meoipzi.meoipzi.outfit.domain.Outfit;
 import meoipzi.meoipzi.product.dto.ProductListResponseDTO;
 
 import java.util.List;
@@ -26,9 +26,9 @@ public class OutfitResponseDTO {
     public OutfitResponseDTO(Outfit outfit){
         this.imgUrl = outfit.getImgUrl();
         this.content = outfit.getContent();
-        this.modelHeight = outfit.getModelHeight();
-        this.modelWeight = outfit.getModelWeight();
-        this.modelInstagramId = outfit.getModelInstagramId();
+        //this.modelHeight = outfit.getModelHeight();
+        //this.modelWeight = outfit.getModelWeight();
+        //this.modelInstagramId = outfit.getModelInstagramId();
     }
 
     public void setProducts(List<ProductListResponseDTO> productListResponseDTOS){

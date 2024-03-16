@@ -18,7 +18,7 @@ import meoipzi.meoipzi.login.repository.UserRepository;
 import meoipzi.meoipzi.mypage.dto.*;
 import meoipzi.meoipzi.common.excepiton.NotFoundContentException;
 import meoipzi.meoipzi.common.excepiton.NotFoundMemberException;
-import meoipzi.meoipzi.profile.outfit.domain.Outfit;
+import meoipzi.meoipzi.outfit.domain.Outfit;
 import meoipzi.meoipzi.product.domain.Product;
 import meoipzi.meoipzi.scrap.domain.Scrap;
 import meoipzi.meoipzi.scrap.repository.ScrapRepository;

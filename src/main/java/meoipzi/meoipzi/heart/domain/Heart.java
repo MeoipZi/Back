@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import meoipzi.meoipzi.community.domain.Community;
 import meoipzi.meoipzi.login.domain.User;
-import meoipzi.meoipzi.profile.outfit.domain.Outfit;
+import meoipzi.meoipzi.outfit.domain.Outfit;
 import meoipzi.meoipzi.shortform.domain.ShortForm;
 
 import java.time.LocalDateTime;

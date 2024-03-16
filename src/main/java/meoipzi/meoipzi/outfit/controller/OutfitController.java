@@ -1,13 +1,13 @@
-package meoipzi.meoipzi.profile.outfit.controller;
+package meoipzi.meoipzi.outfit.controller;
 
 import lombok.RequiredArgsConstructor;
 import meoipzi.meoipzi.login.repository.UserRepository;
 import meoipzi.meoipzi.login.service.UserService;
-import meoipzi.meoipzi.profile.outfit.dto.OutfitRequestDTO;
-import meoipzi.meoipzi.profile.outfit.dto.OutfitResponseDTO;
-import meoipzi.meoipzi.profile.outfit.dto.OutfitTotalResponseDTO;
-import meoipzi.meoipzi.profile.outfit.dto.OutfitUpdateRequestDTO;
-import meoipzi.meoipzi.profile.outfit.service.OutfitService;
+import meoipzi.meoipzi.outfit.dto.OutfitUpdateRequestDTO;
+import meoipzi.meoipzi.outfit.dto.OutfitRequestDTO;
+import meoipzi.meoipzi.outfit.dto.OutfitResponseDTO;
+import meoipzi.meoipzi.outfit.dto.OutfitTotalResponseDTO;
+import meoipzi.meoipzi.outfit.service.OutfitService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

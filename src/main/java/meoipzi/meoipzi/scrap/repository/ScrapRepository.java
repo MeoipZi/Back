@@ -1,7 +1,7 @@
 package meoipzi.meoipzi.scrap.repository;
 
 import meoipzi.meoipzi.login.domain.User;
-import meoipzi.meoipzi.profile.outfit.domain.Outfit;
+import meoipzi.meoipzi.outfit.domain.Outfit;
 import meoipzi.meoipzi.product.domain.Product;
 import meoipzi.meoipzi.scrap.domain.Scrap;
 import org.springframework.data.jpa.repository.JpaRepository;

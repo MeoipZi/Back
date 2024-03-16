@@ -3,7 +3,7 @@ package meoipzi.meoipzi.heart.repository;
 import meoipzi.meoipzi.community.domain.Community;
 import meoipzi.meoipzi.heart.domain.Heart;
 import meoipzi.meoipzi.login.domain.User;
-import meoipzi.meoipzi.profile.outfit.domain.Outfit;
+import meoipzi.meoipzi.outfit.domain.Outfit;
 import meoipzi.meoipzi.shortform.domain.ShortForm;
 import org.springframework.data.jpa.repository.JpaRepository;
 

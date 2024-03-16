@@ -5,8 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import meoipzi.meoipzi.common.BaseTimeEntity;
 import meoipzi.meoipzi.login.domain.User;
-import meoipzi.meoipzi.profile.outfit.domain.Outfit;
+import meoipzi.meoipzi.outfit.domain.Outfit;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -16,15 +17,12 @@ import java.time.LocalDateTime;
 @Setter
 @Table(name = "CMTOUTFIT")
 @NoArgsConstructor
-public class CommentOutfit {
+public class CommentOutfit extends BaseTimeEntity {
     @GeneratedValue
     @Id
     @Column(name="comment_outfit_id")
     private Long id;
     private String content;
-    @Column(name = "created_at")
-    @CreatedDate
-    private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name="user_id")
     private User user;
@@ -34,9 +32,8 @@ public class CommentOutfit {
 
 
     @Builder
-    public CommentOutfit(String content, LocalDateTime createdAt, User user,Outfit outfit){
+    public CommentOutfit(String content, User user,Outfit outfit){
         this.content = content;
-        this.createdAt = createdAt;
         this.user = user;
         this.outfit = outfit;
     }

@@ -2,6 +2,7 @@ package meoipzi.meoipzi.comment.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import meoipzi.meoipzi.common.BaseTimeEntity;
 import meoipzi.meoipzi.community.domain.Community;
 import meoipzi.meoipzi.login.domain.User;
 import org.springframework.data.annotation.CreatedDate;
@@ -16,7 +17,7 @@ import java.util.List;
 @Setter
 @Table(name = "CMTCOMM")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CommentCommunity {
+public class CommentCommunity extends BaseTimeEntity {
     @GeneratedValue
     @Id
     @Column(name="comment_community_id")
@@ -24,10 +25,6 @@ public class CommentCommunity {
 
     @Column(nullable = false, length = 1000)
     String content;
-    @Column(name = "created_at")
-    @CreatedDate
-    private LocalDateTime createdAt;
-
 
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "parent_id")
     private CommentCommunity parentComment;//부모 댓글 나타내는 필드
@@ -44,9 +41,8 @@ public class CommentCommunity {
     private Community community;
 
     @Builder
-    public CommentCommunity(String content, LocalDateTime createdAt,User user, Community community){
+    public CommentCommunity(String content,User user, Community community){
         this.content = content;
-        this.createdAt = createdAt;
         this.user = user;
         this.community = community;
     }

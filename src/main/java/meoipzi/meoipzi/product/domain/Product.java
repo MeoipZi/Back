@@ -2,8 +2,9 @@ package meoipzi.meoipzi.product.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import meoipzi.meoipzi.common.BaseTimeEntity;
 import meoipzi.meoipzi.login.domain.User;
-import meoipzi.meoipzi.profile.outfit.domain.Outfit;
+import meoipzi.meoipzi.outfit.domain.Outfit;
 import meoipzi.meoipzi.scrap.domain.Scrap;
 
 import java.time.LocalDateTime;
@@ -17,7 +18,7 @@ import java.util.List;
 @Table(name = "PRODUCT")
 @NoArgsConstructor
 //@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Product {
+public class Product extends BaseTimeEntity {
     @GeneratedValue
     @Id
     @Column(name="product_id")
@@ -32,8 +33,7 @@ public class Product {
     private String category;
     private String brand;
 
-    //시간 추가하기
-    private LocalDateTime createdAt;
+
 
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name="user_id")
     private User user;

@@ -1,17 +1,17 @@
-package meoipzi.meoipzi.profile.outfit.service;
+package meoipzi.meoipzi.outfit.service;
 
 import lombok.RequiredArgsConstructor;
 import meoipzi.meoipzi.common.config.S3Config;
 import meoipzi.meoipzi.common.excepiton.NotFoundMemberException;
 import meoipzi.meoipzi.login.domain.User;
 import meoipzi.meoipzi.login.repository.UserRepository;
-import meoipzi.meoipzi.profile.outfit.domain.Outfit;
-import meoipzi.meoipzi.profile.outfit.dto.OutfitRequestDTO;
-import meoipzi.meoipzi.profile.outfit.dto.OutfitResponseDTO;
-import meoipzi.meoipzi.profile.outfit.dto.OutfitTotalResponseDTO;
-import meoipzi.meoipzi.profile.outfit.dto.OutfitUpdateRequestDTO;
+import meoipzi.meoipzi.outfit.dto.OutfitResponseDTO;
+import meoipzi.meoipzi.outfit.dto.OutfitTotalResponseDTO;
+import meoipzi.meoipzi.outfit.dto.OutfitUpdateRequestDTO;
+import meoipzi.meoipzi.outfit.domain.Outfit;
+import meoipzi.meoipzi.outfit.dto.OutfitRequestDTO;
 import meoipzi.meoipzi.product.dto.ProductListResponseDTO;
-import meoipzi.meoipzi.profile.outfit.repository.OutfitRepository;
+import meoipzi.meoipzi.outfit.repository.OutfitRepository;
 import meoipzi.meoipzi.product.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
