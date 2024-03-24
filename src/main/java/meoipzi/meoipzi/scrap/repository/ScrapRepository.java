@@ -15,4 +15,7 @@ public interface ScrapRepository extends JpaRepository<Scrap, Long> {
 
     List<Scrap> findTop3ByUserAndProductNotNullOrderByCreatedAtDesc(User user);
     List<Scrap> findTop3ByUserAndOutfitNotNullOrderByCreatedAtDesc(User user);
+
+    List<Scrap> findAllByUserAndProductNotNullOrderByCreatedAtDesc(User user);
+    List<Scrap> findAllByUserAndOutfitNotNullOrderByCreatedAtDesc(User user);
 }

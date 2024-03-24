@@ -12,7 +12,7 @@ public interface CommunityRepository extends JpaRepository<Community, Long> {
     Page<Community> findAllByCategoryOrderByIdDesc(String category, Pageable pageable);
     Page<Community> findAllByCategoryOrderByLikesCount(String category, Pageable pageable);
     List<Community> findTop3ByUserOrderByCreatedAtDesc(User user);
-    List<Community> findAllByOrderByCreatedAtDesc(); // 전체 커뮤니티를 최신순으로 정렬하여 가져옴
+    List<Community> findAllByUserOrderByCreatedAtDesc(User user);
 
 
 }
