@@ -6,15 +6,19 @@ import meoipzi.meoipzi.common.config.S3Config;
 import meoipzi.meoipzi.common.excepiton.NotFoundMemberException;
 import meoipzi.meoipzi.login.domain.User;
 import meoipzi.meoipzi.login.repository.UserRepository;
+import meoipzi.meoipzi.login.service.CustomUserDetailsService;
 import meoipzi.meoipzi.profile.domain.Profile;
+import meoipzi.meoipzi.profile.dto.ProfileImageUploadRequestDto;
 import meoipzi.meoipzi.profile.dto.ProfileRegisterRequestDto;
 import meoipzi.meoipzi.profile.dto.ProfileUpdateRequestDto;
 import meoipzi.meoipzi.profile.repository.ProfileRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -24,23 +28,46 @@ public class ProfileService {
     private final UserRepository userRepository;
     private final S3Config s3Config;
     private final ProfileRepository profileRepository;
+    private final CustomUserDetailsService userDetailsService;
+    // 프로필 이미지 업로드
+    @Transactional
+    public ResponseEntity<?> uploadProfileImage(ProfileImageUploadRequestDto profileImageUploadRequestDto){
+        User user = userRepository.findByUsername(profileImageUploadRequestDto.getUsername())
+                .orElseThrow(() -> new NotFoundMemberException("해당 이메일에 해당하는 회원이 없습니다. : " +profileImageUploadRequestDto.getUsername()));
+        try {
+            if(profileImageUploadRequestDto.getImgUrl() != null) {
+                String filePath = s3Config.upload(profileImageUploadRequestDto.getImgUrl());
+                Profile profile = profileImageUploadRequestDto.toEntity();
+                profile.setImgUrl(filePath);
+                profile.setUser(user);
+                profileRepository.save(profile);
+
+                return ResponseEntity.ok(filePath);
+            }
+        }
+        catch(IOException e){
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok(null);
+    }
 
     // 초기 프로필 등록
     @Transactional
     public ResponseEntity<?> registerProfile(ProfileRegisterRequestDto profileRegisterRequestDto) {
-        User user = userRepository.findByUsername(profileRegisterRequestDto.getUserName())
-                .orElseThrow(() -> new NotFoundMemberException("해당 이메일에 해당하는 회원이 없습니다. : " + profileRegisterRequestDto.getUserName()));
+        User user = userRepository.findByUsername(profileRegisterRequestDto.getUsername())
+                .orElseThrow(() -> new NotFoundMemberException("해당 이메일에 해당하는 회원이 없습니다. : " + profileRegisterRequestDto.getUsername()));
+        // findByUser은 되는데, findByUserId는 안되는 이유?
+        // User -> token별로 생기는 건가??
+        Profile profile = profileRepository.findByUser(user);
+        profile.setImgUrl(profile.getImgUrl());
+        //profileRegisterRequestDto.setImgUrl(profile.getImgUrl());
+        profile.setNickname(profileRegisterRequestDto.getNickname());
+        profile.setHeight(profileRegisterRequestDto.getHeight());
+        profile.setWeight(profileRegisterRequestDto.getWeight());
+        profile.setHeightSecret(profileRegisterRequestDto.isHeightSecret());
+        profile.setWeightSecret(profileRegisterRequestDto.isWeightSecret());
+        profileRepository.save(profile);
 
-        try {
-            if (profileRegisterRequestDto.getImgUrl() != null) {
-                String filePath = s3Config.upload(profileRegisterRequestDto.getImgUrl());
-                Profile profile = profileRegisterRequestDto.toEntity();
-                profile.setImgUrl(filePath);
-                profileRepository.save(profile);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
         return ResponseEntity.ok(profileRegisterRequestDto);
     }
 
@@ -71,5 +98,4 @@ public class ProfileService {
         }
         return ResponseEntity.ok(profileUpdateRequestDto);
     }
-
 }

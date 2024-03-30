@@ -43,4 +43,10 @@ public class CustomUserDetailsService implements UserDetailsService {
                 user.getPassword(),
                 grantedAuthorities);
     }
+
+    public String getCurrentUsername(){
+        // 현재 로그인한 사용자의 UserDetails 객체 가져오기
+        UserDetails userDetails = (UserDetails) org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userDetails.getUsername();
+     }
 }

@@ -63,4 +63,8 @@ public class Profile {
         return this.profileId;
     }
 
+    // 현재 로그인한 사용자의 username(이메일 주소) 반환
+    public String getCurrentUsername(){
+        return user != null ? user.getUsername() : null;
+    }
 }
