@@ -5,7 +5,6 @@ import meoipzi.meoipzi.login.auth.JwtAccessDeniedHandler;
 import meoipzi.meoipzi.login.auth.JwtAuthenticationEntryPoint;
 import meoipzi.meoipzi.login.auth.JwtSecurityConfig;
 import meoipzi.meoipzi.login.auth.TokenProvider;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -22,8 +21,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-
-import java.util.Arrays;
 
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -66,7 +63,6 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers("/api/home", "/api/authenticate", "/api/signup").permitAll() //원래 토큰이 없는 상태에서 시도하므로
-                    //    .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .anyRequest().authenticated()
                 )
 
@@ -74,11 +70,6 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-
-                // enable h2-console
-//                .headers(headers ->
-//                        headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
-//                )
 
                 .with(new JwtSecurityConfig(tokenProvider), customizer -> {});
         return http.build();

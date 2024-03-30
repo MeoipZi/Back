@@ -3,6 +3,7 @@ package meoipzi.meoipzi.login.controller;
 
 import meoipzi.meoipzi.login.dto.UserDto;
 import meoipzi.meoipzi.login.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,12 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
+
+    @GetMapping("/health-check")
+    public ResponseEntity<Void> checkHealthStatus() {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
     @GetMapping("/home")
     public ResponseEntity<String> hello() {

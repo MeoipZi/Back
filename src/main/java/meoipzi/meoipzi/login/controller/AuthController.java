@@ -44,7 +44,6 @@ public class AuthController {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt); // 헤더에 토큰 넣음(Bearer 필수)
-        System.out.println("왜");
         return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK); // TokenDto를 이용해 responsebody에도 토큰 넣어줌
     }
 }
