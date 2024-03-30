@@ -11,14 +11,20 @@ import meoipzi.meoipzi.product.dto.ProductListResponseDTO;
 import meoipzi.meoipzi.product.dto.ProductRequestDTO;
 import meoipzi.meoipzi.product.dto.ProductResponseDTO;
 import meoipzi.meoipzi.outfit.repository.OutfitRepository;
+import meoipzi.meoipzi.product.dto.ProductTotalResponseDTO;
 import meoipzi.meoipzi.product.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -79,4 +85,31 @@ public class ProductService {
     public void deleteProduct(Long productId){
         productRepository.deleteById(productId);
     }
+
+    public Page<ProductTotalResponseDTO> getLatestProducts(String category, Pageable pageable){
+        try{
+            Page<Product> productsPage = productRepository.findByCategoryOrderByIdDesc(category, pageable);
+            List<ProductTotalResponseDTO> productDTOs = productsPage.stream()
+                    .map(ProductTotalResponseDTO::new)
+                    .collect(Collectors.toList());
+            return new PageImpl<>(productDTOs,pageable,productDTOs.size());
+        }catch (Exception e){
+            e.printStackTrace();
+            return new PageImpl<>(Collections.emptyList());
+        }
+    }
+
+    public Page<ProductTotalResponseDTO> getLatestProductsByBrand(String brand, Pageable pageable){
+        try{
+            Page<Product> productsPage = productRepository.findByBrandOrderByIdDesc(brand, pageable);
+            List<ProductTotalResponseDTO> productDTOs = productsPage.stream()
+                    .map(ProductTotalResponseDTO::new)
+                    .collect(Collectors.toList());
+            return new PageImpl<>(productDTOs,pageable,productDTOs.size());
+        }catch (Exception e){
+            e.printStackTrace();
+            return new PageImpl<>(Collections.emptyList());
+        }
+    }
+
 }

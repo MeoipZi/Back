@@ -16,9 +16,10 @@ public class OutfitResponseDTO {
     //코디
     private String imgUrl;
     private String content;
-    private Long modelHeight;
-    private Long modelWeight;
-    private String modelInstagramId;
+    //private Long modelHeight;
+    //private Long modelWeight;
+    //private String modelInstagramId;
+
 
     //상품
     private List<ProductListResponseDTO> productListResponseDTOS;

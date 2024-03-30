@@ -25,10 +25,12 @@ public class Product extends BaseTimeEntity {
     private Long id;
 
     private String imgUrl;
-    private String shopUrl;
     private String shopName;
     private String title; //content 같은 것임
     private Long price;
+
+    private String shopUrl;
+
     //이거 추가함 0312
     private String category;
     private String brand;
@@ -45,12 +47,14 @@ public class Product extends BaseTimeEntity {
     private Outfit outfit;
 
     @Builder
-    public Product(String imgUrl, String shopName, String title, Long price, String shopUrl, User user){
+    public Product(String imgUrl, String shopName, String title, Long price, String shopUrl, String category, String brand, User user){
         this.imgUrl = imgUrl;
         this.shopName = shopName;
         this.title =title;
         this.price = price;
         this.shopUrl = shopUrl;
+        this.category = category;
+        this.brand = brand;
         this.user = user;
     }
 }
