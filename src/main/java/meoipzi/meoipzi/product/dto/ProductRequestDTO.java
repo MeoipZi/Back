@@ -20,6 +20,11 @@ public class ProductRequestDTO {
     private String title;
     private Long price;
     private String shopUrl;
+    private String category;
+    private String brand;
+
+
+
 
     public Product toEntity(User user){
         return Product.builder()
@@ -28,6 +33,8 @@ public class ProductRequestDTO {
                 .title(title)
                 .price(price)
                 .shopUrl(shopUrl)
+                .category(category)
+                .brand(brand)
                 .user(user)
                 .build();
     }

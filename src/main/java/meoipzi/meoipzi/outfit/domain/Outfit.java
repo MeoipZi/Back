@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import meoipzi.meoipzi.comment.domain.CommentOutfit;
 import meoipzi.meoipzi.common.BaseTimeEntity;
+//import meoipzi.meoipzi.genreoutfit.GenreOutfit;
 import meoipzi.meoipzi.heart.domain.Heart;
 import meoipzi.meoipzi.login.domain.User;
 import meoipzi.meoipzi.product.domain.Product;
@@ -50,8 +51,10 @@ public class Outfit extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "outfit")
     private List<Product> products = new ArrayList<>();
-
-
+/*
+    @OneToMany(mappedBy = "outfit")
+    private List<GenreOutfit> genreOutfits = new ArrayList<>();
+*/
 
 
 
