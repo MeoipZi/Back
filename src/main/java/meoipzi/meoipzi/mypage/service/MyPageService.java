@@ -24,6 +24,7 @@ import meoipzi.meoipzi.scrap.domain.Scrap;
 import meoipzi.meoipzi.scrap.repository.ScrapRepository;
 import meoipzi.meoipzi.shortform.domain.ShortForm;
 import meoipzi.meoipzi.shortform.repository.ShortFormRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,7 @@ public class MyPageService {
     private final CommentShortFormRepository cmtSFRepository;
     private final CommentCommunityRepository cmtCommRepository;
 
+    // get feeds (community, shortform)
     @Transactional
     public ResponseEntity<?> getFeeds(Principal principal) throws IOException {
 
@@ -87,6 +89,59 @@ public class MyPageService {
     }
 
     @Transactional
+    public ResponseEntity<?> getComms(Principal principal) throws IOException {
+
+        String username = principal.getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + username));
+
+        List<Community> commList = communityRepository.findAllByUserOrderByCreatedAtDesc(user);
+        if(commList.isEmpty()){
+            throw new NotFoundContentException("Could not find community board for user: " + username);
+        }
+
+        log.info("community 게시글: {}", commList.isEmpty());
+
+        //현재까지 작성한 커뮤니티의 정보가 저장될 dto 리스트
+        List<MyCommResponseDto> uploadedComms = new ArrayList<>();
+
+        if(!commList.isEmpty()) {
+            for (Community comm : commList) {
+                MyCommResponseDto uploadedComm = new MyCommResponseDto(comm.getId(), comm.getTitle(), comm.getLikesCount(), comm.getCommentsCount(), comm.getCreatedAt());
+                uploadedComms.add(uploadedComm);
+            }
+        }
+        return new ResponseEntity<>(uploadedComms, HttpStatus.OK);
+    }
+
+    @Transactional
+    public ResponseEntity<?> getShortForms(Principal principal) throws IOException {
+
+        String username = principal.getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + username));
+
+        List<ShortForm> sfList = shortFormRepository.findAllByUserOrderByCreatedAtDesc(user);
+        if(sfList.isEmpty()){
+            throw new NotFoundContentException("Could not find community board for user: " + username);
+        }
+
+        log.info("shortforms: {}", sfList.isEmpty());
+
+        //현재까지 작성한 숏폼의 정보가 저장될 dto 리스트
+        List<MyImageResponseDto> uploadedSFs = new ArrayList<>();
+        if(!sfList.isEmpty()) {
+            for (ShortForm sf : sfList) {
+                MyImageResponseDto uploadedSF = new MyImageResponseDto(sf.getId(), sf.getImgUrl(), sf.getCreatedAt());
+                uploadedSFs.add(uploadedSF);
+            }
+        }
+
+        return new ResponseEntity<>(uploadedSFs, HttpStatus.OK);
+    }
+
+    // get comments - outfit, shortform, community
+    @Transactional
     public ResponseEntity<?> getComments(Principal principal) {
         String username = principal.getName();
         User user = userRepository.findByUsername(username)
@@ -95,7 +150,7 @@ public class MyPageService {
         //load 3 comments - outfit, community, shortform, reply
         List<CommentOutfit> cmtOutfitList = cmtOutfitRepository.findTop3ByUserOrderByCreatedAtDesc(user);
         List<CommentShortForm> cmtSFList = cmtSFRepository.findTop3ByUserOrderByCreatedAtDesc(user);
-        List<CommentCommunity> cmtCommList = cmtCommRepository.findTop3DistinctCommentsByUserOrderByCreatedAtDesc(user);
+        List<CommentCommunity> cmtCommList = cmtCommRepository.findTop3DistinctCommentsByUserOrderByCreatedAtDesc(user, PageRequest.of(0,3));
 
         if(cmtOutfitList.isEmpty()&&cmtSFList.isEmpty()&&cmtCommList.isEmpty()){
             throw new NotFoundContentException("Could not find comments for user: " + username);
@@ -135,6 +190,87 @@ public class MyPageService {
         myComments.setCmtShortforms(cmtShortForms);
         myComments.setCmtComms(cmtComms);
         return new ResponseEntity<>(myComments, HttpStatus.OK);
+    }
+
+    @Transactional
+    public ResponseEntity<?> getCmtOutfits(Principal principal) {
+        String username = principal.getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + username));
+
+        //load comments - outfit
+        List<CommentOutfit> cmtOutfitList = cmtOutfitRepository.findAllByUserOrderByCreatedAtDesc(user);
+
+        if(cmtOutfitList.isEmpty()){
+            throw new NotFoundContentException("Could not find comments for user: " + username);
+        }
+        log.info("outfits 댓글: {}", cmtOutfitList.isEmpty());
+
+        List<MyImageResponseDto> cmtOutfits = new ArrayList<>();
+
+        if(!cmtOutfitList.isEmpty()){
+            for(CommentOutfit cmt: cmtOutfitList){
+                Outfit outfit = cmt.getOutfit();
+                MyImageResponseDto cmtOutfit = new MyImageResponseDto(outfit.getId(), outfit.getImgUrl(), cmt.getCreatedAt());
+                cmtOutfits.add(cmtOutfit);
+            }
+        }
+
+        return new ResponseEntity<>(cmtOutfits, HttpStatus.OK);
+    }
+
+
+    @Transactional
+    public ResponseEntity<?> getCmtSFs(Principal principal) {
+        String username = principal.getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + username));
+
+        //load comments - shortform
+        List<CommentShortForm> cmtSFList = cmtSFRepository.findAllByUserOrderByCreatedAtDesc(user);
+
+        if(cmtSFList.isEmpty()){
+            throw new NotFoundContentException("Could not find comments for user: " + username);
+        }
+
+        log.info("shortforms 댓글: {}", cmtSFList.isEmpty());
+
+        List<MyImageResponseDto> cmtShortForms = new ArrayList<>();
+        if(!cmtSFList.isEmpty()){
+            for(CommentShortForm cmt: cmtSFList){
+                ShortForm shortForm = cmt.getShortForm();
+                MyImageResponseDto cmtShortForm = new MyImageResponseDto(shortForm.getId(), shortForm.getImgUrl(), cmt.getCreatedAt());
+                cmtShortForms.add(cmtShortForm);
+            }
+        }
+
+        return new ResponseEntity<>(cmtShortForms, HttpStatus.OK);
+    }
+
+    @Transactional
+    public ResponseEntity<?> getCmtComms(Principal principal) {
+        String username = principal.getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + username));
+
+        //load comments - community
+        List<CommentCommunity> cmtCommList = cmtCommRepository.findDistinctCommentsByUserOrderByCreatedAtDesc(user);
+
+        if(cmtCommList.isEmpty()){
+            throw new NotFoundContentException("Could not find comments for user: " + username);
+        }
+        log.info("comms 댓글: {}", cmtCommList.isEmpty());
+
+        List<MyCommResponseDto> cmtComms = new ArrayList<>();
+
+        if(!cmtCommList.isEmpty()){
+            for(CommentCommunity cmt: cmtCommList){
+                Community comm = cmt.getCommunity();
+                MyCommResponseDto cmtComm = new MyCommResponseDto(comm.getId(), comm.getTitle(), comm.getLikesCount(), comm.getCommentsCount(), cmt.getCreatedAt());
+                cmtComms.add(cmtComm);
+            }
+        }
+        return new ResponseEntity<>(cmtComms, HttpStatus.OK);
     }
 
     //outfit, product
@@ -178,25 +314,73 @@ public class MyPageService {
     }
 
     @Transactional
+    public ResponseEntity<?> getSrpOutfits(Principal principal) throws IOException{
+        String username = principal.getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + username));
+
+        List<Scrap> outfitList = scrapRepository.findAllByUserAndOutfitNotNullOrderByCreatedAtDesc(user);
+
+        if(outfitList.isEmpty()){
+            throw new NotFoundContentException("Could not find scraps for user: " + username);
+        }
+
+        log.info("스크랩한 outfits: {}", outfitList.isEmpty());
+
+        List<MyImageResponseDto> scrapedOutfits = new ArrayList<>();
+
+        if(!outfitList.isEmpty()){
+            for(Scrap scrap: outfitList){
+                Outfit outfit = scrap.getOutfit();
+                MyImageResponseDto scrapedOutfit = new MyImageResponseDto(outfit.getId(), outfit.getImgUrl(), scrap.getCreatedAt());
+                scrapedOutfits.add(scrapedOutfit);
+            }
+        }
+        return new ResponseEntity<>(scrapedOutfits, HttpStatus.OK);
+    }
+    @Transactional
+    public ResponseEntity<?> getSrpProducts(Principal principal) throws IOException{
+        String username = principal.getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + username));
+
+        List<Scrap> productList = scrapRepository.findAllByUserAndProductNotNullOrderByCreatedAtDesc(user);
+        if(productList.isEmpty()){
+            throw new NotFoundContentException("Could not find scraps for user: " + username);
+        }
+
+        log.info("스크랩한 products: {}", productList.isEmpty());
+
+        List<MyImageResponseDto> scrapedProducts = new ArrayList<>();
+
+        if(!productList.isEmpty()){
+            for(Scrap scrap: productList){
+                Product product = scrap.getProduct();
+                MyImageResponseDto scrapedProduct = new MyImageResponseDto(product.getId(), product.getImgUrl(), scrap.getCreatedAt());
+                scrapedProducts.add(scrapedProduct);
+            }
+        }
+        return new ResponseEntity<>(scrapedProducts, HttpStatus.OK);
+    }
+
+    //outfit community shortform
+    @Transactional
     public ResponseEntity<?> getLikes(Principal principal) throws IOException{
         String username = principal.getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + username));
 
         List<Heart> outfitList = heartRepository.findTop3ByUserAndOutfitNotNullOrderByCreatedAtDesc(user);
-        List<Heart> commList = heartRepository.findTop3ByUserAndCommunityNotNullOrderByCreatedAtDesc(user);
         List<Heart> shortFormList = heartRepository.findTop3ByUserAndShortFormNotNullOrderByCreatedAtDesc(user);
 
-        if(outfitList.isEmpty()&&shortFormList.isEmpty()&&commList.isEmpty()){
+        if(outfitList.isEmpty()&&shortFormList.isEmpty()){
             throw new NotFoundContentException("Could not find likes for user: " + username);
         }
         log.info("좋아요 outfits: {}", outfitList.isEmpty());
         log.info("좋아요 shortforms: {}", shortFormList.isEmpty());
-        log.info("좋아요 comms: {}", commList.isEmpty());
 
         List<MyImageResponseDto> likedOutfits = new ArrayList<>();
         List<MyImageResponseDto> likedShortForms = new ArrayList<>();
-        List<MyCommResponseDto> likedComms = new ArrayList<>();
         MyHeartsDto likeHearts = new MyHeartsDto();
 
         if(!outfitList.isEmpty()){
@@ -206,6 +390,61 @@ public class MyPageService {
                 likedOutfits.add(likedOutfit);
             }
         }
+        if(!shortFormList.isEmpty()) {
+            for (Heart heart : shortFormList) {
+                ShortForm shortForm = heart.getShortForm();
+                MyImageResponseDto likedShortForm = new MyImageResponseDto(shortForm.getId(), shortForm.getImgUrl(), heart.getCreatedAt());
+                likedShortForms.add(likedShortForm);
+            }
+        }
+        likeHearts.setLikedOutfits(likedOutfits);
+        likeHearts.setLikedShortForms(likedShortForms);
+        return new ResponseEntity<>(likeHearts, HttpStatus.OK);
+    }
+
+    @Transactional
+    public ResponseEntity<?> getLikeOutfits(Principal principal) throws IOException{
+        String username = principal.getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + username));
+
+        List<Heart> outfitList = heartRepository.findAllByUserAndOutfitNotNullOrderByCreatedAtDesc(user);
+
+        if(outfitList.isEmpty()){
+            throw new NotFoundContentException("Could not find likes for user: " + username);
+        }
+        log.info("좋아요 outfits: {}", outfitList.isEmpty());
+
+        List<MyImageResponseDto> likedOutfits = new ArrayList<>();
+
+        if(!outfitList.isEmpty()){
+            for(Heart heart: outfitList){
+                Outfit outfit = heart.getOutfit();
+                MyImageResponseDto likedOutfit = new MyImageResponseDto(outfit.getId(), outfit.getImgUrl(), heart.getCreatedAt());
+                likedOutfits.add(likedOutfit);
+            }
+        }
+        return new ResponseEntity<>(likedOutfits, HttpStatus.OK);
+    }
+
+    @Transactional
+    public ResponseEntity<?> getLikeSFs(Principal principal) throws IOException{
+        String username = principal.getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + username));
+
+        List<Heart> shortFormList = heartRepository.findAllByUserAndShortFormNotNullOrderByCreatedAtDesc(user);
+
+        if(shortFormList.isEmpty()){
+            throw new NotFoundContentException("Could not find likes for user: " + username);
+        }
+
+        log.info("좋아요 shortforms: {}", shortFormList.isEmpty());
+
+
+        List<MyImageResponseDto> likedShortForms = new ArrayList<>();
+
+
         if(!shortFormList.isEmpty()){
             for(Heart heart: shortFormList){
                 ShortForm shortForm = heart.getShortForm();
@@ -213,16 +452,10 @@ public class MyPageService {
                 likedShortForms.add(likedShortForm);
             }
         }
-        if(!commList.isEmpty()){
-            for(Heart heart: commList){
-                Community comm = heart.getCommunity();
-                MyCommResponseDto likedComm = new MyCommResponseDto(comm.getId(), comm.getTitle(), comm.getLikesCount(), comm.getCommentsCount(), heart.getCreatedAt());
-                likedComms.add(likedComm);
-            }
-        }
-        likeHearts.setLikedOutfits(likedOutfits);
-        likeHearts.setLikedShortForms(likedShortForms);
-        likeHearts.setLikedComms(likedComms);
-        return new ResponseEntity<>(likeHearts, HttpStatus.OK);
+        return new ResponseEntity<>(likedShortForms, HttpStatus.OK);
     }
 }
+
+
+
+

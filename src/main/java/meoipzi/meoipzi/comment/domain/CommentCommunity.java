@@ -32,8 +32,6 @@ public class CommentCommunity extends BaseTimeEntity {
     @OneToMany(mappedBy = "parentComment")
     private List<CommentCommunity> children = new ArrayList<>();
 
-
-
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name="user_id")
     private User user;
 

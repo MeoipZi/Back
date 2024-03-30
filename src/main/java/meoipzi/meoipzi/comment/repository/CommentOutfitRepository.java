@@ -10,4 +10,5 @@ import java.util.List;
 public interface CommentOutfitRepository extends JpaRepository<CommentOutfit, Long> {
     List<CommentOutfit> findByOutfitId(Long outfitId);
     List<CommentOutfit> findTop3ByUserOrderByCreatedAtDesc(User user);
+    List<CommentOutfit> findAllByUserOrderByCreatedAtDesc(User user);
 }

@@ -12,7 +12,7 @@ public interface ShortFormRepository extends JpaRepository<ShortForm, Long> {
     Page<ShortForm> findAllByOrderByIdDesc(Pageable pageable); // 최신순 조회
     Page<ShortForm> findAllByOrderByLikesCountDesc(Pageable pageable); // 좋아요순 조회
     List<ShortForm> findTop3ByUserOrderByCreatedAtDesc(User user);
-    List<ShortForm> findAllByOrderByCreatedAtDesc(); // 전체 숏폼을 최신순으로 정렬하여 가져옴
+    List<ShortForm> findAllByUserOrderByCreatedAtDesc(User user);
 
 
 }

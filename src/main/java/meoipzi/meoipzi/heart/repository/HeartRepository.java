@@ -16,6 +16,8 @@ public interface HeartRepository extends JpaRepository<Heart, Long> {
     Optional<Heart> findByUserAndOutfit(User user, Outfit outfit);
 
     List<Heart> findTop3ByUserAndOutfitNotNullOrderByCreatedAtDesc(User user);
-    List<Heart> findTop3ByUserAndCommunityNotNullOrderByCreatedAtDesc(User user);
     List<Heart> findTop3ByUserAndShortFormNotNullOrderByCreatedAtDesc(User user);
+
+    List<Heart> findAllByUserAndOutfitNotNullOrderByCreatedAtDesc(User user);
+    List<Heart> findAllByUserAndShortFormNotNullOrderByCreatedAtDesc(User user);
 }

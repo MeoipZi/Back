@@ -40,7 +40,7 @@ public class OutfitService {
     @Transactional
     public ResponseEntity<?> saveOutfit(OutfitRequestDTO outfitRequestDTO) throws Exception{
         User user = userRepository.findByUsername(outfitRequestDTO.getUsername())
-                .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + outfitRequestDTO.getUsername()));
+                .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + outfitRequestDTO.getUsername()));//status code 500
 
         try{
             if(outfitRequestDTO.getImgUrl() != null){
