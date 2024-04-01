@@ -10,8 +10,10 @@ import meoipzi.meoipzi.login.service.CustomUserDetailsService;
 import meoipzi.meoipzi.profile.domain.Profile;
 import meoipzi.meoipzi.profile.dto.ProfileImageUploadRequestDto;
 import meoipzi.meoipzi.profile.dto.ProfileRegisterRequestDto;
+import meoipzi.meoipzi.profile.dto.ProfileResponseDto;
 import meoipzi.meoipzi.profile.dto.ProfileUpdateRequestDto;
 import meoipzi.meoipzi.profile.repository.ProfileRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
@@ -57,10 +59,9 @@ public class ProfileService {
         User user = userRepository.findByUsername(profileRegisterRequestDto.getUsername())
                 .orElseThrow(() -> new NotFoundMemberException("해당 이메일에 해당하는 회원이 없습니다. : " + profileRegisterRequestDto.getUsername()));
         // findByUser은 되는데, findByUserId는 안되는 이유?
-        // User -> token별로 생기는 건가??
+        // User -> token별로 생기는 건가?? -> 아니었음!!
         Profile profile = profileRepository.findByUser(user);
-        profile.setImgUrl(profile.getImgUrl());
-        //profileRegisterRequestDto.setImgUrl(profile.getImgUrl());
+        profileRegisterRequestDto.setImgUrl(profile.getImgUrl());
         profile.setNickname(profileRegisterRequestDto.getNickname());
         profile.setHeight(profileRegisterRequestDto.getHeight());
         profile.setWeight(profileRegisterRequestDto.getWeight());
@@ -69,6 +70,23 @@ public class ProfileService {
         profileRepository.save(profile);
 
         return ResponseEntity.ok(profileRegisterRequestDto);
+    }
+
+    // 프로필 정보 조회
+    public ResponseEntity<?> getProfileByUser(User user){
+        Profile profile = profileRepository.findByUser(user);
+        if(profile == null)
+            return new ResponseEntity<>("프로필을 찾을 수 없습니다. ", HttpStatus.NOT_FOUND);
+        ProfileResponseDto profileResponseDto = new ProfileResponseDto();
+        profileResponseDto.setImgUrl(profile.getImgUrl());
+        profileResponseDto.setUsername(profile.getUser().getUsername());
+        profileResponseDto.setNickname(profile.getNickname());
+        profileResponseDto.setHeight(profile.getHeight());
+        profileResponseDto.setWeight(profile.getWeight());
+        profileResponseDto.setHeightSecret(profile.isHeightSecret());
+        profileResponseDto.setWeightSecret(profile.isWeightSecret());
+
+        return ResponseEntity.ok(profileResponseDto);
     }
 
 
