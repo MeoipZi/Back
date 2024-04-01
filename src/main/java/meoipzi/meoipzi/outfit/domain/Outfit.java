@@ -5,13 +5,13 @@ import jakarta.persistence.*;
 import lombok.*;
 import meoipzi.meoipzi.comment.domain.CommentOutfit;
 import meoipzi.meoipzi.common.BaseTimeEntity;
-//import meoipzi.meoipzi.genreoutfit.GenreOutfit;
+//import meoipzi.meoipzi.genreoutfit.domain.GenreOutfit;
+import meoipzi.meoipzi.genreoutfit.domain.GenreOutfit;
 import meoipzi.meoipzi.heart.domain.Heart;
 import meoipzi.meoipzi.login.domain.User;
 import meoipzi.meoipzi.product.domain.Product;
 
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,9 +34,6 @@ public class Outfit extends BaseTimeEntity {
     //private Long modelWeight;
     //private String modelInstagramId;
     //private String modelGender;
-
-    //0312 시간 넣기!!!!!!
-
     private int likesCount; //이거 추가
     private int commentCounts; //이거 추가
 
@@ -51,10 +48,10 @@ public class Outfit extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "outfit")
     private List<Product> products = new ArrayList<>();
-/*
+
     @OneToMany(mappedBy = "outfit")
     private List<GenreOutfit> genreOutfits = new ArrayList<>();
-*/
+
 
 
 

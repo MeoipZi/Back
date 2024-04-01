@@ -3,13 +3,14 @@ package meoipzi.meoipzi.outfit.service;
 import lombok.RequiredArgsConstructor;
 import meoipzi.meoipzi.common.config.S3Config;
 import meoipzi.meoipzi.common.excepiton.NotFoundMemberException;
+import meoipzi.meoipzi.genre.domain.Genre;
+import meoipzi.meoipzi.genre.repository.GenreRepository;
+import meoipzi.meoipzi.genreoutfit.domain.GenreOutfit;
+import meoipzi.meoipzi.genreoutfit.repository.GenreOutfitRepository;
 import meoipzi.meoipzi.login.domain.User;
 import meoipzi.meoipzi.login.repository.UserRepository;
-import meoipzi.meoipzi.outfit.dto.OutfitResponseDTO;
-import meoipzi.meoipzi.outfit.dto.OutfitTotalResponseDTO;
-import meoipzi.meoipzi.outfit.dto.OutfitUpdateRequestDTO;
+import meoipzi.meoipzi.outfit.dto.*;
 import meoipzi.meoipzi.outfit.domain.Outfit;
-import meoipzi.meoipzi.outfit.dto.OutfitRequestDTO;
 import meoipzi.meoipzi.product.dto.ProductListResponseDTO;
 import meoipzi.meoipzi.outfit.repository.OutfitRepository;
 import meoipzi.meoipzi.product.service.ProductService;
@@ -32,6 +33,8 @@ import java.util.stream.Collectors;
 public class OutfitService {
     private final OutfitRepository outfitRepository;
     private final UserRepository userRepository;
+    private final GenreRepository genreRepository;
+    private final GenreOutfitRepository genreOutfitRepository;
     private final S3Config s3Config;
 
     private final ProductService productService;
@@ -46,7 +49,13 @@ public class OutfitService {
             if(outfitRequestDTO.getImgUrl() != null){
                 String filePath = s3Config.upload(outfitRequestDTO.getImgUrl());
                 Outfit outfit = outfitRequestDTO.toEntity(user);
-                //outfitRequestDTO.toEntity(user).setImgUrl(filePath); //Outfit 객체에 대한 것이니까 스트링 타입으로 넣어야함
+                for (Long genreId : outfitRequestDTO.getGenreIds()) {
+                    Genre genre = genreRepository.findById(genreId)
+                            .orElseThrow(() -> new Exception("Could not find genre with ID: " + genreId));
+                    GenreOutfit genreOutfit = new GenreOutfit(genre, outfit);
+                    genreOutfitRepository.save(genreOutfit);// 장르와 아웃핏 연결 저장
+                    outfit.getGenreOutfits().add(genreOutfit);
+                }
                 outfit.setImgUrl(filePath);
                 outfitRepository.save(outfit);
             }
@@ -119,6 +128,29 @@ public class OutfitService {
         } catch (Exception e) {
             e.printStackTrace();
             // 예외 처리 또는 로깅을 통한 추가 조사
+            return new PageImpl<>(Collections.emptyList());
+        }
+    }
+
+    public Page<OutfitsGenreResponseDTO> getLatestOutfitsByGenre(Long genreId, Pageable pageable){
+        try{
+            Genre genre = genreRepository.findGenreById(genreId);
+            if (genre == null) {
+                return new PageImpl<>(Collections.emptyList());
+            }
+            List<GenreOutfit> genreOutfits = genre.getGenreOutfits();
+            List<OutfitsGenreResponseDTO> outfitsDTOList = genreOutfits.stream()
+                    .map(genreOutfit -> {
+                        OutfitsGenreResponseDTO responseDTO = new OutfitsGenreResponseDTO();
+                        Outfit outfit = genreOutfit.getOutfit();
+                        responseDTO.setOutfitId(outfit.getId());
+                        responseDTO.setImgUrl(outfit.getImgUrl());
+                        return responseDTO;
+                    })
+                    .collect(Collectors.toList());
+            return new PageImpl<>(outfitsDTOList, pageable, outfitsDTOList.size());
+        }catch (Exception e){
+            e.printStackTrace();
             return new PageImpl<>(Collections.emptyList());
         }
     }

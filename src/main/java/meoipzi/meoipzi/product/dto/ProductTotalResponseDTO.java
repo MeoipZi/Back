@@ -10,7 +10,9 @@ import meoipzi.meoipzi.product.domain.Product;
 @NoArgsConstructor
 public class ProductTotalResponseDTO {
     private String imgUrl;
+    private Long productId;
     public ProductTotalResponseDTO(Product product){
         this.imgUrl = product.getImgUrl();
+        this.productId = product.getId();
     }
 }
