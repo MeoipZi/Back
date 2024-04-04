@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 /* 커뮤니티 게시글 수정 DTO */
 public class CommunityUpdateRequestDTO {
-    private String userName;
+    private String username;
 
     private String title; // 제목
     private String contents; // 내용

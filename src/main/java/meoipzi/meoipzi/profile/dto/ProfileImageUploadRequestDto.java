@@ -15,16 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProfileImageUploadRequestDto {
     private String username;
     @JsonIgnore
-    private MultipartFile imgUrl; // 프로필 이미지 업로드
-    public Profile toEntity() {
-        return Profile.builder()
-                .imgUrl(imgUrl != null ? imgUrl.getOriginalFilename() : null)
-                .height(null)
-                .weight(null)
-                .nickname(null)
-                .heightSecret(false)
-                .weightSecret(false)
-                .build();
-    }
+    private MultipartFile imgUrl; // 프로필 이미지 업로드 구현
 }
 

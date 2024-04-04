@@ -67,7 +67,6 @@ public class Community extends BaseEntity {
         this.contents = contents;
         this.category = category;
         this.createdAt = getCreatedAt();
-        this.formattedCreatedAt = getFormattedCreatedAt();
     }
 
     // 엔티티 수정 메서드

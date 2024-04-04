@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -31,6 +32,7 @@ public class ProfileService {
     private final S3Config s3Config;
     private final ProfileRepository profileRepository;
     private final CustomUserDetailsService userDetailsService;
+    private String imgS3Url = ""; // s3에 업로드된 프로필 이미지
     // 프로필 이미지 업로드
     @Transactional
     public ResponseEntity<?> uploadProfileImage(ProfileImageUploadRequestDto profileImageUploadRequestDto){
@@ -38,13 +40,8 @@ public class ProfileService {
                 .orElseThrow(() -> new NotFoundMemberException("해당 이메일에 해당하는 회원이 없습니다. : " +profileImageUploadRequestDto.getUsername()));
         try {
             if(profileImageUploadRequestDto.getImgUrl() != null) {
-                String filePath = s3Config.upload(profileImageUploadRequestDto.getImgUrl());
-                Profile profile = profileImageUploadRequestDto.toEntity();
-                profile.setImgUrl(filePath);
-                profile.setUser(user);
-                profileRepository.save(profile);
-
-                return ResponseEntity.ok(filePath);
+                imgS3Url = s3Config.upload(profileImageUploadRequestDto.getImgUrl());
+                return ResponseEntity.ok(imgS3Url); // body에 url 담아서 리턴해줌
             }
         }
         catch(IOException e){
@@ -55,19 +52,43 @@ public class ProfileService {
 
     // 초기 프로필 등록
     @Transactional
-    public ResponseEntity<?> registerProfile(ProfileRegisterRequestDto profileRegisterRequestDto) {
+    public ResponseEntity<?> registerProfile(@RequestBody ProfileRegisterRequestDto profileRegisterRequestDto) throws IOException {
         User user = userRepository.findByUsername(profileRegisterRequestDto.getUsername())
                 .orElseThrow(() -> new NotFoundMemberException("해당 이메일에 해당하는 회원이 없습니다. : " + profileRegisterRequestDto.getUsername()));
         // findByUser은 되는데, findByUserId는 안되는 이유?
         // User -> token별로 생기는 건가?? -> 아니었음!!
-        Profile profile = profileRepository.findByUser(user);
-        profileRegisterRequestDto.setImgUrl(profile.getImgUrl());
-        profile.setNickname(profileRegisterRequestDto.getNickname());
-        profile.setHeight(profileRegisterRequestDto.getHeight());
-        profile.setWeight(profileRegisterRequestDto.getWeight());
-        profile.setHeightSecret(profileRegisterRequestDto.isHeightSecret());
-        profile.setWeightSecret(profileRegisterRequestDto.isWeightSecret());
-        profileRepository.save(profile);
+        // DTO에서 데이터 가져오기
+        String nickname = profileRegisterRequestDto.getNickname();
+        Integer height = profileRegisterRequestDto.getHeight();
+        Integer weight = profileRegisterRequestDto.getWeight();
+        boolean heightSecret = profileRegisterRequestDto.isHeightSecret();
+        boolean weightSecret = profileRegisterRequestDto.isWeightSecret();
+
+        // 로그를 통해 DTO 값 확인
+        System.out.println("DTO에서 가져온 값: ");
+        System.out.println("Nickname: " + nickname);
+        System.out.println("Height: " + height);
+        System.out.println("Weight: " + weight);
+        System.out.println("Height Secret: " + heightSecret);
+        System.out.println("Weight Secret: " + weightSecret);
+
+        profileRegisterRequestDto.setImgUrl(imgS3Url);
+        Profile newProfile = profileRegisterRequestDto.toEntity(user);
+        newProfile.setNickname(nickname);
+        newProfile.setHeight(height);
+        newProfile.setWeight(weight);
+        newProfile.setHeightSecret(heightSecret);
+        newProfile.setWeightSecret(weightSecret);
+
+        // 올바른 엔티티 값 확인
+        System.out.println("엔티티에 설정된 값: ");
+        System.out.println("Nickname: " + newProfile.getNickname());
+        System.out.println("Height: " + newProfile.getHeight());
+        System.out.println("Weight: " + newProfile.getWeight());
+        System.out.println("Height Secret: " + newProfile.isHeightSecret());
+        System.out.println("Weight Secret: " + newProfile.isWeightSecret());
+
+        profileRepository.save(newProfile);
 
         return ResponseEntity.ok(profileRegisterRequestDto);
     }

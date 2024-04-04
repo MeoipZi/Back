@@ -72,14 +72,15 @@ public class CommunityService {
     // 커뮤니티 글 등록
     @Transactional
     public ResponseEntity<?> saveCommunity(CommunityRequestDTO communityRequestDTO) {
-        User user = userRepository.findByUsername(communityRequestDTO.getUserName())
-                .orElseThrow(()-> new NotFoundMemberException("해당 이메일에 해당하는 회원이 없습니다. : "+ communityRequestDTO.getUserName()));
+        User user = userRepository.findByUsername(communityRequestDTO.getUsername())
+                .orElseThrow(()-> new NotFoundMemberException("해당 이메일에 해당하는 회원이 없습니다. : "+ communityRequestDTO.getUsername()));
 
         try {
             if(communityRequestDTO.getImgUrl() != null) {
                 String filePath = s3Config.upload(communityRequestDTO.getImgUrl());
-                Community community = communityRequestDTO.toEntity();
+                Community community = communityRequestDTO.toEntity(user);
                 community.setImgUrl(filePath);
+                community.setUser(user);
                 communityRepository.save(community);
             }
         } catch (IOException e) {
@@ -97,7 +98,7 @@ public class CommunityService {
     // 커뮤니티 글 수정
     @Transactional
     public ResponseEntity<?> updateCommunity(Long communityId, CommunityUpdateRequestDTO communityUpdateRequestDTO) throws IOException {
-        User user = userRepository.findByUsername(communityUpdateRequestDTO.getUserName())
+        User user = userRepository.findByUsername(communityUpdateRequestDTO.getUsername())
                 .orElseThrow(()-> new NotFoundMemberException("해당 사용자를 찾을 수 없습니다."));
 
         try {

@@ -39,8 +39,8 @@ public class ProfileController {
     }
 
     // 회원가입 직후 초기 프로필 설정
-    @PostMapping("/settings")
-    public ResponseEntity<?> setProfile(ProfileRegisterRequestDto profileRegisterRequestDto) {
+    @RequestMapping("/settings")
+    public ResponseEntity<?> setProfile(@RequestBody ProfileRegisterRequestDto profileRegisterRequestDto) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         profileRegisterRequestDto.setUsername(authentication.getName());
         if(authentication.isAuthenticated()) {

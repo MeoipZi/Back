@@ -17,7 +17,7 @@ import java.util.List;
 /* 커뮤니티 글 하나 상세 조회 시 반환할 DTO */
 public class CommunityResponseDTO {
     private Long communityId;
-    private String userName; // 작성자
+    private String userName; // 작성자 닉네임(익명이면 익명이라 표시)
     private String profileImg; // 작성자 프로필 이미지
     private LocalDateTime createdAt; // 글 작성 일자
     private String title; // 커뮤니티 글 제목
@@ -25,7 +25,6 @@ public class CommunityResponseDTO {
     private String imgUrl; // 사진 첨부
     private int likesCount; // 좋아요 개수
     private int commentsCount; // 댓글 개수
-    private String formattedCreatedAt;
     private List<CommentCommunity> comments; // 댓글 리스트를 상세 조회 dto에 실어서 반환
 
     public CommunityResponseDTO(Community community, List<CommentCommunity> comments) {
@@ -38,7 +37,6 @@ public class CommunityResponseDTO {
         this.imgUrl = community.getImgUrl();
         this.commentsCount = community.getCommentsCount();
         this.likesCount = community.getLikesCount();
-        this.formattedCreatedAt = community.getFormattedCreatedAt();
         this.comments = comments;
     }
 
