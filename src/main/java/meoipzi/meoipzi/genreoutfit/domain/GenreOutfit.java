@@ -1,4 +1,4 @@
-/*package meoipzi.meoipzi.genreoutfit;
+package meoipzi.meoipzi.genreoutfit.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import meoipzi.meoipzi.genre.domain.Genre;
 import meoipzi.meoipzi.outfit.domain.Outfit;
-*//*
+
 @Entity
 @Table(name = "GENRE_OUTFIT")
 @Getter
@@ -32,4 +32,3 @@ public class GenreOutfit {
         this.outfit = outfit;
     }
 }
-*/

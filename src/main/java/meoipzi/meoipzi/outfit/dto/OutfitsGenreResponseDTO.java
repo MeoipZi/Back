@@ -4,20 +4,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import meoipzi.meoipzi.outfit.domain.Outfit;
+import meoipzi.meoipzi.product.domain.Product;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class OutfitTotalResponseDTO {
-    //검색하기 창은 ...client
-    //private Long id;
+public class OutfitsGenreResponseDTO {
     private String imgUrl;
     private Long outfitId;
-
-    public OutfitTotalResponseDTO(Outfit outfit) {
-        this.outfitId = outfit.getId();
+    public OutfitsGenreResponseDTO(Outfit outfit){
         this.imgUrl = outfit.getImgUrl();
+        this.outfitId = outfit.getId();
     }
-
-
 }

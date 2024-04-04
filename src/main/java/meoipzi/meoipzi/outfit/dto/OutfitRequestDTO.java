@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 //import meoipzi.meoipzi.genre.domain.Genre;
-//import meoipzi.meoipzi.genreoutfit.GenreOutfit;
+//import meoipzi.meoipzi.genreoutfit.domain.GenreOutfit;
 import meoipzi.meoipzi.login.domain.User;
 import meoipzi.meoipzi.outfit.domain.Outfit;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,20 +30,13 @@ public class OutfitRequestDTO {
 
     private List<Long> genreIds;
     public Outfit toEntity(User user){
-        /*Outfit outfit = Outfit.builder()
+        Outfit outfit = Outfit.builder()
                 .imgUrl(imgUrl != null ? imgUrl.getOriginalFilename() : null)
                 .content(content)
                 .user(user)
                 .build();
 
-        if(genreIds != null){
-            for(Long genreId : genreIds){
-                Genre genre = new Genre();
-                genre.setId(genreId);
-                outfit.getGenreOutfits().add(new GenreOutfit(genre,outfit));
-            }
-        }*/
-        return Outfit.builder()
+        /*return Outfit.builder()
                 .imgUrl(imgUrl != null ? imgUrl.getOriginalFilename() : null)
                 .content(content)
                 //.modelHeight(modelHeight)
@@ -51,7 +44,7 @@ public class OutfitRequestDTO {
                 //.modelInstagramId(modelInstagramId)
                 //.modelGender(modelGender)
                 .user(user)
-                .build();
-        //return  outfit;
+                .build();*/
+        return  outfit;
     }
 }

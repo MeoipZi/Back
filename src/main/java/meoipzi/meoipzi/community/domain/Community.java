@@ -52,10 +52,10 @@ public class Community extends BaseEntity {
     private List<CommentCommunity> commentCommunities = new ArrayList<>();
 
     @Column(name = "LIKES_COUNT")
-    private int likesCount; // 좋아요 개수
+    private Integer likesCount=0; // 좋아요 개수
 
     @Column(name = "CMT_COUNT")
-    private int commentsCount; // 댓글 개수
+    private Integer commentsCount=0; // 댓글 개수
 
     @Builder
     public Community(String imgUrl, User user, boolean isAnonymous,

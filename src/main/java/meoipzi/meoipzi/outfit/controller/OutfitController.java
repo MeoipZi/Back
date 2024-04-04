@@ -1,13 +1,12 @@
 package meoipzi.meoipzi.outfit.controller;
 
 import lombok.RequiredArgsConstructor;
+import meoipzi.meoipzi.genre.repository.GenreRepository;
 import meoipzi.meoipzi.login.repository.UserRepository;
 import meoipzi.meoipzi.login.service.UserService;
-import meoipzi.meoipzi.outfit.dto.OutfitUpdateRequestDTO;
-import meoipzi.meoipzi.outfit.dto.OutfitRequestDTO;
-import meoipzi.meoipzi.outfit.dto.OutfitResponseDTO;
-import meoipzi.meoipzi.outfit.dto.OutfitTotalResponseDTO;
+import meoipzi.meoipzi.outfit.dto.*;
 import meoipzi.meoipzi.outfit.service.OutfitService;
+import meoipzi.meoipzi.product.dto.ProductTotalResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +27,7 @@ public class OutfitController {
     private final OutfitService outfitService;
     private final UserService userService;
     private final UserRepository userRepository;
+
 
     //코디 등록하기! - 로그인여부 확인
     @PostMapping("/outfits")
@@ -69,7 +70,12 @@ public class OutfitController {
         Pageable pageable = PageRequest.of(page,size);
         Page<OutfitTotalResponseDTO> popularOutfitsPage = outfitService.getPopularOutfits(pageable);
 
-        List<List<String>> outfitsGrid = partitionIntoRows(popularOutfitsPage.getContent().stream().map(OutfitTotalResponseDTO::getImgUrl).collect(Collectors.toList()), 2);
+        List<List<Object>> outfitsGrid = partitionIntoRows2(
+                popularOutfitsPage.getContent().stream()
+                        .flatMap(outfit -> Stream.of(outfit.getOutfitId(), outfit.getImgUrl()))
+                        .collect(Collectors.toList()),
+                4
+        );
         return ResponseEntity.ok(outfitsGrid);
     }
 
@@ -82,13 +88,35 @@ public class OutfitController {
         Pageable pageable = PageRequest.of(page, size);
         Page<OutfitTotalResponseDTO> latestOutfitsPage = outfitService.getLatestOutfits(pageable);
 
-        List<List<String>> outfitsGrid = partitionIntoRows(latestOutfitsPage.getContent().stream().map(OutfitTotalResponseDTO::getImgUrl).collect(Collectors.toList()), 2);
+
+        List<List<Object>> outfitsGrid = partitionIntoRows2(
+                latestOutfitsPage.getContent().stream()
+                        .flatMap(outfit -> Stream.of(outfit.getOutfitId(), outfit.getImgUrl()))
+                        .collect(Collectors.toList()),
+                4
+        );
         return ResponseEntity.ok(outfitsGrid);
     }
 
 
-    private List<List<String>> partitionIntoRows(List<String> list, int elementsPerRow) {
-        List<List<String>> rows = new ArrayList<>();
+    //한 장르에 어떤 코디들이 있는지 조회하는 화면 [최신순 조회]
+    @GetMapping("/outfits/search/genre/latest")
+    public ResponseEntity<?> getLatestOutfitsByGenre(@RequestParam(value = "genreId") Long genreId, @RequestParam(value = "page") int page, @RequestParam(value = "size") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<OutfitsGenreResponseDTO> latestOutfitsPage = outfitService.getLatestOutfitsByGenre(genreId, pageable);
+
+        List<List<Object>> outfitsGrid = partitionIntoRows2(
+                latestOutfitsPage.getContent().stream()
+                        .flatMap(outfit -> Stream.of(outfit.getOutfitId(), outfit.getImgUrl()))
+                        .collect(Collectors.toList()),
+                4
+        );
+
+        return ResponseEntity.ok(outfitsGrid);
+    }
+
+    private List<List<Object>> partitionIntoRows2(List<Object> list, int elementsPerRow) {
+        List<List<Object>> rows = new ArrayList<>();
         for (int i = 0; i < list.size(); i += elementsPerRow) {
             int end = Math.min(i + elementsPerRow, list.size());
             rows.add(list.subList(i, end));

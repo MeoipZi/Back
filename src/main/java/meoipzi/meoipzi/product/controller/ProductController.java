@@ -19,11 +19,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequiredArgsConstructor
@@ -81,17 +79,24 @@ public class ProductController {
     //http://localhost:8080/outfits/latest?category=아우터&page=0&size=20
     // 한 카테고리에 어떤 상품들이 있는지 조회하는 화면 [기본 : 최신순 조회]
 
+
     @GetMapping("/products/search/category/latest")
     public ResponseEntity<?> getLatestProductsByCategory(@RequestParam(value = "category") String category, @RequestParam(value = "page")int page, @RequestParam(value = "size") int size){
         Pageable pageable = PageRequest.of(page,size);
         Page<ProductTotalResponseDTO> latestProductsPage = productService.getLatestProducts(category, pageable);
 
-        List<List<String>> outfitsGrid = partitionIntoRows(latestProductsPage.getContent().stream().map(ProductTotalResponseDTO::getImgUrl).collect(Collectors.toList()), 2);
+        List<List<Object>> outfitsGrid = partitionIntoRows(
+                latestProductsPage.getContent().stream()
+                        .flatMap(product -> Stream.of(product.getProductId(), product.getImgUrl()))
+                        .collect(Collectors.toList()),
+                4
+        );
+
         return ResponseEntity.ok(outfitsGrid);
     }
 
-    private List<List<String>> partitionIntoRows(List<String> list, int elementsPerRow) {
-        List<List<String>> rows = new ArrayList<>();
+    private List<List<Object>> partitionIntoRows(List<Object> list, int elementsPerRow) {
+        List<List<Object>> rows = new ArrayList<>();
         for (int i = 0; i < list.size(); i += elementsPerRow) {
             int end = Math.min(i + elementsPerRow, list.size());
             rows.add(list.subList(i, end));
@@ -99,15 +104,24 @@ public class ProductController {
         return rows;
     }
 
+
+
     //한 브랜드에 어떤 상품들이 있는지 조회하는 화면 [최신순 조회] [0330]
     @GetMapping("/products/search/brand/latest")
-    public ResponseEntity<?> getLatestProductsByBrand(@RequestParam(value = "brand") String brand, @RequestParam(value = "page")int page, @RequestParam(value = "size") int size){
-        Pageable pageable = PageRequest.of(page,size);
+    public ResponseEntity<?> getLatestProductsByBrand(@RequestParam(value = "brand") String brand, @RequestParam(value = "page") int page, @RequestParam(value = "size") int size) {
+        Pageable pageable = PageRequest.of(page, size);
         Page<ProductTotalResponseDTO> latestProductsPage = productService.getLatestProductsByBrand(brand, pageable);
 
-        List<List<String>> outfitsGrid = partitionIntoRows(latestProductsPage.getContent().stream().map(ProductTotalResponseDTO::getImgUrl).collect(Collectors.toList()), 2);
+        List<List<Object>> outfitsGrid = partitionIntoRows(
+                latestProductsPage.getContent().stream()
+                        .flatMap(product -> Stream.of(product.getProductId(), product.getImgUrl()))
+                        .collect(Collectors.toList()),
+                4
+        );
+
         return ResponseEntity.ok(outfitsGrid);
     }
+
 
 
 
