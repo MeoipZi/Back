@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import meoipzi.meoipzi.login.domain.User;
 import meoipzi.meoipzi.shortform.domain.ShortForm;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,11 +21,12 @@ public class ShortformRequestDTO {
     private String title;
     private String contents;
 
-    public ShortForm toEntity() {
+    public ShortForm toEntity(User user) {
         return ShortForm.builder()
                 .imgUrl(imgUrl.getOriginalFilename())
                 .title(title)
                 .contents(contents)
+                .user(user)
                 .build();
     }
 }

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @RequiredArgsConstructor
@@ -38,10 +39,9 @@ public class ShortformController {
         Pageable pageable = PageRequest.of(page,size);
         Page<ShortformListResponseDTO> popularShortformPage = shortformService.getPopularShortformList(pageable);
 
-        List<List<String>> shortformsGrid = partitionIntoRows(popularShortformPage.getContent()
-                .stream()
-                .map(ShortformListResponseDTO::getImgUrl)
-                .collect(Collectors.toList()), 2);
+        List<List<Object>> shortformsGrid = partitionIntoRows(popularShortformPage.getContent().stream()
+                .flatMap(shortform -> Stream.of(shortform.getShortFormId(), shortform.getImgUrl()))
+                .collect(Collectors.toList()),4);
         return ResponseEntity.ok(shortformsGrid);
     }
 
@@ -52,10 +52,10 @@ public class ShortformController {
         Pageable pageable = PageRequest.of(page,size);
         Page<ShortformListResponseDTO> popularShortformPage = shortformService.getLatestShortformList(pageable);
 
-        List<List<String>> shortformsGrid = partitionIntoRows(popularShortformPage.getContent()
-                .stream()
-                .map(ShortformListResponseDTO::getImgUrl)
-                .collect(Collectors.toList()), 2);
+        List<List<Object>> shortformsGrid = partitionIntoRows(
+                popularShortformPage.getContent().stream()
+                        .flatMap(shortform -> Stream.of(shortform.getShortFormId(), shortform.getImgUrl()))
+                        .collect(Collectors.toList()),4);
         return ResponseEntity.ok(shortformsGrid);
     }
 
@@ -74,7 +74,7 @@ public class ShortformController {
     @PostMapping("")
     public ResponseEntity<?> createShortform(ShortformRequestDTO shortformRequestDTO){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
+        shortformRequestDTO.setUsername(authentication.getName());
         if(authentication.isAuthenticated()) {
             try {
                 shortformService.saveShortform(shortformRequestDTO);
@@ -120,8 +120,8 @@ public class ShortformController {
         }
     }
 
-    private List<List<String>> partitionIntoRows(List<String> list, int elementsPerRow) {
-        List<List<String>> rows = new ArrayList<>();
+    private List<List<Object>> partitionIntoRows(List<Object> list, int elementsPerRow) {
+        List<List<Object>> rows = new ArrayList<>();
         for (int i = 0; i < list.size(); i += elementsPerRow) {
             int end = Math.min(i + elementsPerRow, list.size());
             rows.add(list.subList(i, end));

@@ -29,7 +29,9 @@ public class CommentCommunityService {
 
         Community community = communityRepository.findById(communityId)
                 .orElseThrow(() -> new RuntimeException("해당 ID의 커뮤니티를 찾을 수 없습니다."));
-
+        //커뮤 댓글 수 증가
+        community.setCommentsCount(community.getCommentsCount()+1);
+        communityRepository.save(community);
         //String content = commentCommunityRecDTO.getContent();
         CommentCommunity commentCommunity = commentCommunityRecDTO.toEntity(user,community);
         commentCommunityRepository.save(commentCommunity);
@@ -45,7 +47,9 @@ public class CommentCommunityService {
 
         CommentCommunity parentComment = commentCommunityRepository.findById(commentReplyRecDTO.getParentId())
                 .orElseThrow(()->new RuntimeException("해당 부모 ID를 찾을 수 없습니다."));
-
+        //커뮤 댓글 수 증가
+        community.setCommentsCount(community.getCommentsCount()+1);
+        communityRepository.save(community);
         CommentCommunity commentCommunity = commentReplyRecDTO.toEntity(user,community);
         commentCommunity.setParentComment(parentComment);
 
@@ -61,6 +65,10 @@ public class CommentCommunityService {
         if (!comment.getUser().getUsername().equals(username)) {
             throw new RuntimeException("삭제 권한이 없습니다.");
         }
+        // 코디 댓글 수 감소
+        Community community = comment.getCommunity();
+        community.setCommentsCount(community.getCommentsCount()-1);
+        communityRepository.save(community);
 
         // parentId가 null이 아닌 경우에만 삭제
         if (comment.getParentComment() == null) {
@@ -78,7 +86,9 @@ public class CommentCommunityService {
         if (!comment.getUser().getUsername().equals(username)) {
             throw new RuntimeException("삭제 권한이 없습니다.");
         }
-
+        Community community = comment.getCommunity();
+        community.setCommentsCount(community.getCommentsCount()-1);
+        communityRepository.save(community);
         // parentId가 null이 아닌 경우에만 삭제
         if (comment.getParentComment() != null) {
             commentCommunityRepository.delete(comment);

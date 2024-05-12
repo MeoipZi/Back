@@ -10,6 +10,7 @@ import meoipzi.meoipzi.product.dto.ProductTotalResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -83,7 +84,7 @@ public class OutfitController {
 
     //[최신순 조회]
     //http://localhost:8080/outfits/latest?page=0&size=20
-    @GetMapping("/outfits/latest")
+    /*@GetMapping("/outfits/latest")
     public ResponseEntity<?> getLatestOutfits(@RequestParam(value = "page") int page, @RequestParam(value = "size") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<OutfitTotalResponseDTO> latestOutfitsPage = outfitService.getLatestOutfits(pageable);
@@ -96,7 +97,32 @@ public class OutfitController {
                 4
         );
         return ResponseEntity.ok(outfitsGrid);
+    }*/
+    //http://localhost:8080/outfits/latest?page=0
+    @GetMapping("/outfits/latest")
+    public ResponseEntity<?> getLatestOutfits(@RequestParam(value = "page") int page) {
+        int size = 20; // 한 페이지에 가져올 개수를 하드코딩
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<OutfitTotalResponseDTO> latestOutfitsPage = outfitService.getLatestOutfits(pageable);
+
+        List<Object> outfitItems = latestOutfitsPage.getContent().stream()
+                .flatMap(outfit -> Stream.of(outfit.getOutfitId(), outfit.getImgUrl()))
+                .collect(Collectors.toList());
+
+        List<List<Object>> outfitsGrid = partitionIntoRows(outfitItems, size);
+        return ResponseEntity.ok(outfitsGrid);
     }
+
+    private List<List<Object>> partitionIntoRows(List<Object> list, int elementsPerRow) {
+        List<List<Object>> rows = new ArrayList<>();
+        for (int i = 0; i < list.size(); i += elementsPerRow) {
+            int end = Math.min(i + elementsPerRow, list.size());
+            rows.add(list.subList(i, end));
+        }
+        return rows;
+    }
+
+
 
 
     //한 장르에 어떤 코디들이 있는지 조회하는 화면 [최신순 조회]

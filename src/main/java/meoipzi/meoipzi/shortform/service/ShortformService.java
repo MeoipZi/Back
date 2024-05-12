@@ -71,13 +71,12 @@ public class ShortformService {
     public ResponseEntity<?> saveShortform(ShortformRequestDTO shortformRequestDTO) {
         User user = userRepository.findByUsername(shortformRequestDTO.getUsername())
                 .orElseThrow(() -> new NotFoundMemberException("사용자를 찾을 수 없습니다: " + shortformRequestDTO.getUsername()));
-
         try {
             if (shortformRequestDTO.getImgUrl() != null) {
                 String filePath = s3Config.upload(shortformRequestDTO.getImgUrl());
-                ShortForm shortform = shortformRequestDTO.toEntity();
+                ShortForm shortform = shortformRequestDTO.toEntity(user);
                 shortform.setImgUrl(filePath);
-                shortformRepository.save(shortformRequestDTO.toEntity());
+                shortformRepository.save(shortform);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
