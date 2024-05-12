@@ -74,11 +74,11 @@ public class ShortformController {
     @PostMapping("")
     public ResponseEntity<?> createShortform(ShortformRequestDTO shortformRequestDTO){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
+        shortformRequestDTO.setUsername(authentication.getName());
         if(authentication.isAuthenticated()) {
             try {
-                shortformService.saveShortform(shortformRequestDTO);
-                return new ResponseEntity<>("숏폼 등록에 성공하였습니다.", HttpStatus.OK);
+                return shortformService.saveShortform(shortformRequestDTO);
+                //return new ResponseEntity<>("숏폼 등록에 성공하였습니다.", HttpStatus.OK);
             } catch(Exception e) {
                 return new ResponseEntity<>("숏폼 등록에 실패하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
             }
