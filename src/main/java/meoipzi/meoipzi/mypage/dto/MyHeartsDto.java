@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MyHeartsDto {
-    private List<MyCommResponseDto> likedComms;
+
     private List<MyImageResponseDto> likedOutfits;
     private List<MyImageResponseDto> likedShortForms;
 }

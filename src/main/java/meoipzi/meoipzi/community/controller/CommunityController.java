@@ -83,7 +83,7 @@ public class CommunityController {
     @PostMapping("")
     public ResponseEntity<?> createPost(CommunityRequestDTO communityRequestDTO){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        communityRequestDTO.setUserName(authentication.getName()); // 현재 로그인한 작성자의 이름으로 작성하기
+        communityRequestDTO.setUsername(authentication.getName()); // 현재 로그인한 작성자의 이름으로 작성하기
 
         if(authentication.isAuthenticated()) {
             return communityService.saveCommunity(communityRequestDTO);
@@ -98,7 +98,7 @@ public class CommunityController {
     @PatchMapping("/{communityId}")
     public ResponseEntity<?> updatePost(@PathVariable Long communityId, CommunityUpdateRequestDTO communityUpdateRequestDTO) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        communityUpdateRequestDTO.setUserName(authentication.getName());
+        communityUpdateRequestDTO.setUsername(authentication.getName());
 
         if(authentication.isAuthenticated()){
             return communityService.updateCommunity(communityId, communityUpdateRequestDTO);

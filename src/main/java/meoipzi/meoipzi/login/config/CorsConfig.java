@@ -16,6 +16,7 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:3000"); // 허용할 Origin 지정
+        config.addAllowedOrigin("https://meoipzi.site");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setMaxAge(6000L);

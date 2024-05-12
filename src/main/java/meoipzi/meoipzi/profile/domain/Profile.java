@@ -41,8 +41,9 @@ public class Profile {
 
 
     @Builder
-    public Profile(String nickname, String imgUrl, Integer height,
+    public Profile(User user, String nickname, String imgUrl, Integer height,
                    boolean heightSecret, Integer weight, boolean weightSecret){
+        this.user = user;
         this.nickname = nickname;
         this.imgUrl = imgUrl;
         this.height = height;
@@ -51,17 +52,6 @@ public class Profile {
         this.weightSecret = weightSecret;
     }
 
-    // profile 엔티티 수정 메서드: profileId 리턴
-    public Long update(MultipartFile imgUrl, String nickname, Integer height, Integer weight,
-                       boolean heightSecret, boolean weightSecret) {
-        this.nickname = nickname;
-        this.height = height;
-        this.weight = weight;
-        this.heightSecret = heightSecret;
-        this.weightSecret = weightSecret;
-        this.imgUrl = (imgUrl != null)? imgUrl.getOriginalFilename() : null;
-        return this.profileId;
-    }
 
     // 현재 로그인한 사용자의 username(이메일 주소) 반환
     public String getCurrentUsername(){

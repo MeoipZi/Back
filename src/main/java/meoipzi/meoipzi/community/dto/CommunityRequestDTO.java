@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import meoipzi.meoipzi.community.domain.Category;
 import meoipzi.meoipzi.community.domain.Community;
+import meoipzi.meoipzi.login.domain.User;
 import org.springframework.web.multipart.MultipartFile;
 
 /* 커뮤니티 글 등록 시 사용할 DTO */
@@ -17,8 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class CommunityRequestDTO {
-
-    private String userName;    // 작성자
+    private String username;    // 유저 Id
 
     private boolean isAnonymous; // 익명 여부
     @JsonIgnore
@@ -26,7 +26,7 @@ public class CommunityRequestDTO {
     private String title; // 제목
     private String contents; // 내용
     private Category category; // 브랜드/업체 , 쇼핑&패션, 자유게시판
-    public Community toEntity() {
+    public Community toEntity(User user) {
         return Community.builder()
                 .imgUrl(imgUrl != null ? imgUrl.getOriginalFilename() : null)
                 .isAnonymous(isAnonymous)
