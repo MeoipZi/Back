@@ -80,7 +80,7 @@ public class CommunityService {
                 String filePath = s3Config.upload(communityRequestDTO.getImgUrl());
                 Community community = communityRequestDTO.toEntity(user);
                 community.setImgUrl(filePath);
-                community.setUser(user);
+                //community.setUser(user);
                 communityRepository.save(community);
             }
         } catch (IOException e) {

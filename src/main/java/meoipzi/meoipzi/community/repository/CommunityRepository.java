@@ -13,6 +13,4 @@ public interface CommunityRepository extends JpaRepository<Community, Long> {
     Page<Community> findAllByCategoryOrderByLikesCount(String category, Pageable pageable);
     List<Community> findTop3ByUserOrderByCreatedAtDesc(User user);
     List<Community> findAllByUserOrderByCreatedAtDesc(User user);
-
-
 }

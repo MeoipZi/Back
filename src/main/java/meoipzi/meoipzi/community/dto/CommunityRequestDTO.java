@@ -32,6 +32,7 @@ public class CommunityRequestDTO {
                 .isAnonymous(isAnonymous)
                 .title(title)
                 .contents(contents)
+                .user(user)
                 .category(category.name()) // brand, shop, play 중에 하나
                 .build();
     }
