@@ -63,7 +63,10 @@ public class ShortformController {
     @GetMapping("/{shortformId}")
     public ResponseEntity<?> getOneShortform(@PathVariable Long shortformId) {
         try {
-            ShortformResponseDTO shortformResponseDTO = shortformService.viewShortform(shortformId);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            ShortformResponseDTO shortformResponseDTO = shortformService.viewShortform(shortformId, username);
+
             return new ResponseEntity<>(shortformResponseDTO, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("알 수 없는 오류가 발생하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR);

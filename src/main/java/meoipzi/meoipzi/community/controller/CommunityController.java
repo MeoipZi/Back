@@ -9,6 +9,7 @@ import meoipzi.meoipzi.community.dto.CommunityResponseDTO;
 import meoipzi.meoipzi.community.dto.CommunityUpdateRequestDTO;
 import meoipzi.meoipzi.community.repository.CommunityRepository;
 import meoipzi.meoipzi.community.service.CommunityService;
+import meoipzi.meoipzi.outfit.dto.OutfitRequestDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -79,7 +80,8 @@ public class CommunityController {
         }
     }
 
-    /* 게시글 등록 - 사용자 로그인 여부 필요 */
+
+        /* 게시글 등록 - 사용자 로그인 여부 필요 */
     @PostMapping("")
     public ResponseEntity<?> createPost(CommunityRequestDTO communityRequestDTO){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

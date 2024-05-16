@@ -14,6 +14,7 @@ import meoipzi.meoipzi.community.repository.CommunityRepository;
 import meoipzi.meoipzi.login.domain.User;
 import meoipzi.meoipzi.login.repository.UserRepository;
 import meoipzi.meoipzi.login.service.UserService;
+import meoipzi.meoipzi.shortform.domain.ShortForm;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;

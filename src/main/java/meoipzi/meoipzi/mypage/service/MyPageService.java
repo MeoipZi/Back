@@ -58,12 +58,6 @@ public class MyPageService {
 
         List<Community> commList = communityRepository.findTop3ByUserOrderByCreatedAtDesc(user);
         List<ShortForm> sfList = shortFormRepository.findTop3ByUserOrderByCreatedAtDesc(user);
-        if(commList.isEmpty()&&sfList.isEmpty()){
-            throw new NotFoundContentException("Could not find community board for user: " + username);
-        }
-
-        log.info("community 게시글: {}", commList.isEmpty());
-        log.info("shortforms: {}", sfList.isEmpty());
 
         //현재까지 작성한 피드(커뮤니티, 숏폼)의 정보가 저장될 dto 리스트
         List<MyCommResponseDto> uploadedComms = new ArrayList<>();
@@ -96,11 +90,6 @@ public class MyPageService {
                 .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + username));
 
         List<Community> commList = communityRepository.findAllByUserOrderByCreatedAtDesc(user);
-        if(commList.isEmpty()){
-            throw new NotFoundContentException("Could not find community board for user: " + username);
-        }
-
-        log.info("community 게시글: {}", commList.isEmpty());
 
         //현재까지 작성한 커뮤니티의 정보가 저장될 dto 리스트
         List<MyCommResponseDto> uploadedComms = new ArrayList<>();
@@ -122,14 +111,10 @@ public class MyPageService {
                 .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + username));
 
         List<ShortForm> sfList = shortFormRepository.findAllByUserOrderByCreatedAtDesc(user);
-        if(sfList.isEmpty()){
-            throw new NotFoundContentException("Could not find community board for user: " + username);
-        }
-
-        log.info("shortforms: {}", sfList.isEmpty());
 
         //현재까지 작성한 숏폼의 정보가 저장될 dto 리스트
         List<MyImageResponseDto> uploadedSFs = new ArrayList<>();
+
         if(!sfList.isEmpty()) {
             for (ShortForm sf : sfList) {
                 MyImageResponseDto uploadedSF = new MyImageResponseDto(sf.getId(), sf.getImgUrl(), sf.getCreatedAt());
@@ -151,13 +136,6 @@ public class MyPageService {
         List<CommentOutfit> cmtOutfitList = cmtOutfitRepository.findTop3ByUserOrderByCreatedAtDesc(user);
         List<CommentShortForm> cmtSFList = cmtSFRepository.findTop3ByUserOrderByCreatedAtDesc(user);
         List<CommentCommunity> cmtCommList = cmtCommRepository.findTop3DistinctCommentsByUserOrderByCreatedAtDesc(user, PageRequest.of(0,3));
-
-        if(cmtOutfitList.isEmpty()&&cmtSFList.isEmpty()&&cmtCommList.isEmpty()){
-            throw new NotFoundContentException("Could not find comments for user: " + username);
-        }
-        log.info("outfits 댓글: {}", cmtOutfitList.isEmpty());
-        log.info("shortforms 댓글: {}", cmtSFList.isEmpty());
-        log.info("comms 댓글: {}", cmtCommList.isEmpty());
 
         List<MyImageResponseDto> cmtOutfits = new ArrayList<>();
         List<MyImageResponseDto> cmtShortForms = new ArrayList<>();
@@ -201,11 +179,6 @@ public class MyPageService {
         //load comments - outfit
         List<CommentOutfit> cmtOutfitList = cmtOutfitRepository.findAllByUserOrderByCreatedAtDesc(user);
 
-        if(cmtOutfitList.isEmpty()){
-            throw new NotFoundContentException("Could not find comments for user: " + username);
-        }
-        log.info("outfits 댓글: {}", cmtOutfitList.isEmpty());
-
         List<MyImageResponseDto> cmtOutfits = new ArrayList<>();
 
         if(!cmtOutfitList.isEmpty()){
@@ -229,12 +202,6 @@ public class MyPageService {
         //load comments - shortform
         List<CommentShortForm> cmtSFList = cmtSFRepository.findAllByUserOrderByCreatedAtDesc(user);
 
-        if(cmtSFList.isEmpty()){
-            throw new NotFoundContentException("Could not find comments for user: " + username);
-        }
-
-        log.info("shortforms 댓글: {}", cmtSFList.isEmpty());
-
         List<MyImageResponseDto> cmtShortForms = new ArrayList<>();
         if(!cmtSFList.isEmpty()){
             for(CommentShortForm cmt: cmtSFList){
@@ -255,11 +222,6 @@ public class MyPageService {
 
         //load comments - community
         List<CommentCommunity> cmtCommList = cmtCommRepository.findDistinctCommentsByUserOrderByCreatedAtDesc(user);
-
-        if(cmtCommList.isEmpty()){
-            throw new NotFoundContentException("Could not find comments for user: " + username);
-        }
-        log.info("comms 댓글: {}", cmtCommList.isEmpty());
 
         List<MyCommResponseDto> cmtComms = new ArrayList<>();
 
@@ -282,12 +244,6 @@ public class MyPageService {
 
         List<Scrap> outfitList = scrapRepository.findTop3ByUserAndOutfitNotNullOrderByCreatedAtDesc(user);
         List<Scrap> productList = scrapRepository.findTop3ByUserAndProductNotNullOrderByCreatedAtDesc(user);
-        if(outfitList.isEmpty()&&productList.isEmpty()){
-            throw new NotFoundContentException("Could not find scraps for user: " + username);
-        }
-
-        log.info("스크랩한 outfits: {}", outfitList.isEmpty());
-        log.info("스크랩한 products: {}", productList.isEmpty());
 
         List<MyImageResponseDto> scrapedOutfits = new ArrayList<>();
         List<MyImageResponseDto> scrapedProducts = new ArrayList<>();
@@ -321,12 +277,6 @@ public class MyPageService {
 
         List<Scrap> outfitList = scrapRepository.findAllByUserAndOutfitNotNullOrderByCreatedAtDesc(user);
 
-        if(outfitList.isEmpty()){
-            throw new NotFoundContentException("Could not find scraps for user: " + username);
-        }
-
-        log.info("스크랩한 outfits: {}", outfitList.isEmpty());
-
         List<MyImageResponseDto> scrapedOutfits = new ArrayList<>();
 
         if(!outfitList.isEmpty()){
@@ -345,11 +295,6 @@ public class MyPageService {
                 .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + username));
 
         List<Scrap> productList = scrapRepository.findAllByUserAndProductNotNullOrderByCreatedAtDesc(user);
-        if(productList.isEmpty()){
-            throw new NotFoundContentException("Could not find scraps for user: " + username);
-        }
-
-        log.info("스크랩한 products: {}", productList.isEmpty());
 
         List<MyImageResponseDto> scrapedProducts = new ArrayList<>();
 
@@ -372,12 +317,6 @@ public class MyPageService {
 
         List<Heart> outfitList = heartRepository.findTop3ByUserAndOutfitNotNullOrderByCreatedAtDesc(user);
         List<Heart> shortFormList = heartRepository.findTop3ByUserAndShortFormNotNullOrderByCreatedAtDesc(user);
-
-        if(outfitList.isEmpty()&&shortFormList.isEmpty()){
-            throw new NotFoundContentException("Could not find likes for user: " + username);
-        }
-        log.info("좋아요 outfits: {}", outfitList.isEmpty());
-        log.info("좋아요 shortforms: {}", shortFormList.isEmpty());
 
         List<MyImageResponseDto> likedOutfits = new ArrayList<>();
         List<MyImageResponseDto> likedShortForms = new ArrayList<>();
@@ -402,6 +341,7 @@ public class MyPageService {
         return new ResponseEntity<>(likeHearts, HttpStatus.OK);
     }
 
+
     @Transactional
     public ResponseEntity<?> getLikeOutfits(Principal principal) throws IOException{
         String username = principal.getName();
@@ -409,11 +349,6 @@ public class MyPageService {
                 .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + username));
 
         List<Heart> outfitList = heartRepository.findAllByUserAndOutfitNotNullOrderByCreatedAtDesc(user);
-
-        if(outfitList.isEmpty()){
-            throw new NotFoundContentException("Could not find likes for user: " + username);
-        }
-        log.info("좋아요 outfits: {}", outfitList.isEmpty());
 
         List<MyImageResponseDto> likedOutfits = new ArrayList<>();
 
@@ -434,13 +369,6 @@ public class MyPageService {
                 .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + username));
 
         List<Heart> shortFormList = heartRepository.findAllByUserAndShortFormNotNullOrderByCreatedAtDesc(user);
-
-        if(shortFormList.isEmpty()){
-            throw new NotFoundContentException("Could not find likes for user: " + username);
-        }
-
-        log.info("좋아요 shortforms: {}", shortFormList.isEmpty());
-
 
         List<MyImageResponseDto> likedShortForms = new ArrayList<>();
 

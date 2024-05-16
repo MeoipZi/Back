@@ -3,6 +3,7 @@ package meoipzi.meoipzi.shortform.service;
 import lombok.RequiredArgsConstructor;
 import meoipzi.meoipzi.common.config.S3Config;
 import meoipzi.meoipzi.common.excepiton.NotFoundMemberException;
+import meoipzi.meoipzi.heart.repository.HeartRepository;
 import meoipzi.meoipzi.login.domain.User;
 import meoipzi.meoipzi.login.repository.UserRepository;
 import meoipzi.meoipzi.login.service.UserService;
@@ -35,6 +36,7 @@ public class ShortformService {
     private final ShortFormRepository shortformRepository;
     private final UserRepository userRepository;
     private final S3Config s3Config;
+    private final HeartRepository heartRepository;
 
     // 숏폼 글 리스트 조회 -> 최신순 정렬
     @Transactional
@@ -114,13 +116,20 @@ public class ShortformService {
     }
 
     // 숏폼 하나 상세 조회
-    public ShortformResponseDTO viewShortform(Long communityId){
+    public ShortformResponseDTO viewShortform(Long communityId, String username){
         try {
-            // 조회할 커뮤니티글이 존재하는지 확인
+            // 조회할 숏폼이 존재하는지 확인
             ShortForm shortform = shortformRepository.findById(communityId)
                     .orElseThrow(()-> new NoSuchElementException("조회할 숏폼이 존재하지 않습니다."));
+            User user = userRepository.findByUsername(username)
+                    .orElseThrow(()-> new NotFoundMemberException("회원을 찾을 수 없습니다."));
 
-            return new ShortformResponseDTO(shortform);
+            ShortformResponseDTO shortformResponseDTO = new ShortformResponseDTO(shortform);
+            if(heartRepository.findByUserAndShortForm(user, shortform) != null)
+                shortformResponseDTO.setLikeOrNot(true);
+            else shortformResponseDTO.setLikeOrNot(false);
+
+            return shortformResponseDTO;
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "조회할 숏폼이 존재하지 않습니다.");
         }
