@@ -15,8 +15,8 @@ public class ShortformResponseDTO {
     private String title; // 제목
     private String contents; // 내용
     private int likesCount; // 좋아요 개수
-    // private boolean isLikedByUser; // 현재 로그인한 사용자가 좋아요 눌렀는지
     private int commentsCount; // 댓글 개수
+    private boolean likeOrNot; //좋아요 여부
 
     public ShortformResponseDTO(ShortForm shortform){
         this.shorformId = shortform.getId();
