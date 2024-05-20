@@ -12,7 +12,7 @@ import org.springframework.web.filter.CorsFilter;
 public class CorsConfig {
 
     @Bean
-    public CorsFilter corsFilter() {
+    public CorsFilter corsFilter() { //추가하기
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:3000"); // 허용할 Origin 지정
