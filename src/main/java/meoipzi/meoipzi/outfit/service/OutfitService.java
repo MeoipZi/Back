@@ -7,6 +7,7 @@ import meoipzi.meoipzi.genre.domain.Genre;
 import meoipzi.meoipzi.genre.repository.GenreRepository;
 import meoipzi.meoipzi.genreoutfit.domain.GenreOutfit;
 import meoipzi.meoipzi.genreoutfit.repository.GenreOutfitRepository;
+import meoipzi.meoipzi.heart.repository.HeartRepository;
 import meoipzi.meoipzi.login.domain.User;
 import meoipzi.meoipzi.login.repository.UserRepository;
 import meoipzi.meoipzi.outfit.dto.*;
@@ -38,6 +39,7 @@ public class OutfitService {
     private final S3Config s3Config;
 
     private final ProductService productService;
+    private final HeartRepository heartRepository;
 
     //코디 등록
     @Transactional
@@ -92,13 +94,18 @@ public class OutfitService {
         outfitRepository.deleteById(outfitId);
     }
 
-    public OutfitResponseDTO clickOutfit(Long outfitId){
+    public OutfitResponseDTO clickOutfit(Long outfitId, String username){
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + username));
+
         Outfit outfit = outfitRepository.findById(outfitId)
                 .orElseThrow(() -> new RuntimeException("해당 ID의 제품을 찾을 수 없습니다."));
         List<ProductListResponseDTO> productListResponseDTOS = productService.getProductsByOutfitId(outfitId);
 
         OutfitResponseDTO outfitResponseDTO = new OutfitResponseDTO(outfit);
         outfitResponseDTO.setProducts(productListResponseDTOS);
+        if(heartRepository.findByUserAndOutfit(user, outfit).isPresent())
+            outfitResponseDTO.setLikeOrNot(true);
 
         return outfitResponseDTO;
     }

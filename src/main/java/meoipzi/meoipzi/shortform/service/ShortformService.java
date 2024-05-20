@@ -125,7 +125,7 @@ public class ShortformService {
                     .orElseThrow(()-> new NotFoundMemberException("회원을 찾을 수 없습니다."));
 
             ShortformResponseDTO shortformResponseDTO = new ShortformResponseDTO(shortform);
-            if(heartRepository.findByUserAndShortForm(user, shortform) != null)
+            if(heartRepository.findByUserAndShortForm(user, shortform).isPresent())
                 shortformResponseDTO.setLikeOrNot(true);
 
             return shortformResponseDTO;

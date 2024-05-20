@@ -19,6 +19,7 @@ public class OutfitResponseDTO {
     //private Long modelHeight;
     //private Long modelWeight;
     //private String modelInstagramId;
+    private boolean likeOrNot;
 
 
     //상품
@@ -30,6 +31,7 @@ public class OutfitResponseDTO {
         //this.modelHeight = outfit.getModelHeight();
         //this.modelWeight = outfit.getModelWeight();
         //this.modelInstagramId = outfit.getModelInstagramId();
+        this.likeOrNot = false;
     }
 
     public void setProducts(List<ProductListResponseDTO> productListResponseDTOS){
