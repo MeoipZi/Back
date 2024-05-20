@@ -25,5 +25,6 @@ public class ShortformResponseDTO {
         this.contents = shortform.getContents();
         this.likesCount = shortform.getLikesCount();
         this.commentsCount = shortform.getCommentsCount();
+        this.likeOrNot = false;
     }
 }

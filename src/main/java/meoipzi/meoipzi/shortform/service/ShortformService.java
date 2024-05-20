@@ -127,7 +127,6 @@ public class ShortformService {
             ShortformResponseDTO shortformResponseDTO = new ShortformResponseDTO(shortform);
             if(heartRepository.findByUserAndShortForm(user, shortform) != null)
                 shortformResponseDTO.setLikeOrNot(true);
-            else shortformResponseDTO.setLikeOrNot(false);
 
             return shortformResponseDTO;
         } catch (NoSuchElementException e) {
