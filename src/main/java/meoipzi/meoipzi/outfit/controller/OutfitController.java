@@ -57,7 +57,8 @@ public class OutfitController {
     @GetMapping("/outfits/{outfitId}")
     public ResponseEntity<?> clickOutfit(@PathVariable("outfitId") Long outfitId){
         try{
-            OutfitResponseDTO outfitResponseDTO = outfitService.clickOutfit(outfitId);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            OutfitResponseDTO outfitResponseDTO = outfitService.clickOutfit(outfitId, authentication.getName());
             return new ResponseEntity<>(outfitResponseDTO, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Failed to retrieve outfit", HttpStatus.INTERNAL_SERVER_ERROR);
