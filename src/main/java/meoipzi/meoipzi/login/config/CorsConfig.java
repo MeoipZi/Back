@@ -17,6 +17,7 @@ public class CorsConfig {
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:3000"); // 허용할 Origin 지정
         config.addAllowedOrigin("https://meoipzi.site");
+        config.addAllowedOrigin("https://meoip-zi-fe.vercel.app/");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setMaxAge(6000L);
