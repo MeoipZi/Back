@@ -126,7 +126,7 @@ public class OutfitController {
 
 
     //한 장르에 어떤 코디들이 있는지 조회하는 화면 [최신순 조회]
-    @GetMapping("/outfits/search/genre/latest")
+    @GetMapping("/outfits/search/genre/latest") //  장르
     public ResponseEntity<?> getLatestOutfitsByGenre(@RequestParam(value = "genreId") Long genreId, @RequestParam(value = "page") int page, @RequestParam(value = "size") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<OutfitsGenreResponseDTO> latestOutfitsPage = outfitService.getLatestOutfitsByGenre(genreId, pageable);
