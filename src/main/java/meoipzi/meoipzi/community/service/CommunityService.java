@@ -70,16 +70,17 @@ public class CommunityService {
         }
     }
 
-    // 커뮤니티 글 등록
+    // 커뮤니티 글 등록 -> 등록 시 해당 커뮤니티로 리다이렉트
     @Transactional
     public ResponseEntity<?> saveCommunity(CommunityRequestDTO communityRequestDTO) {
         User user = userRepository.findByUsername(communityRequestDTO.getUsername())
                 .orElseThrow(()-> new NotFoundMemberException("해당 이메일에 해당하는 회원이 없습니다. : "+ communityRequestDTO.getUsername()));
 
+        Community community = null;
         try {
             if(communityRequestDTO.getImgUrl() != null) {
                 String filePath = s3Config.upload(communityRequestDTO.getImgUrl());
-                Community community = communityRequestDTO.toEntity(user);
+                community = communityRequestDTO.toEntity(user);
                 community.setImgUrl(filePath);
                 //community.setUser(user);
                 communityRepository.save(community);
@@ -87,7 +88,7 @@ public class CommunityService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return ResponseEntity.ok(communityRequestDTO);
+        return ResponseEntity.ok(viewCommunity(community.getId()));
     }
 
     // 커뮤니티 글 삭제
