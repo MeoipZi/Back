@@ -87,4 +87,6 @@ public class MyPageController {
     public ResponseEntity<?> likedShortforms(Principal principal) throws IOException {
         return myPageService.getLikeSFs(principal);
     }
+
+    /*shortform*/
 }
