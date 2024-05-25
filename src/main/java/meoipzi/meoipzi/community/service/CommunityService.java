@@ -43,28 +43,28 @@ public class CommunityService {
     private final UserRepository userRepository;
 
     // 커뮤니티 게시글 카테고리별, 최신순 정렬 조회
-    public Page<CommunityListResponseDTO> getLatestCommunityList(String category, Pageable pageable){
+    public Page<CommunityListResponseDTO> getLatestCommunityList(String category, Pageable pageable) {
         try {
             Page<Community> communityPage = communityRepository.findAllByCategoryOrderByIdDesc(category, pageable);
             List<CommunityListResponseDTO> communityListResponseDTOS = communityPage.stream()
                     .map(CommunityListResponseDTO::new)
                     .collect(Collectors.toList());
-            return new PageImpl<>(communityListResponseDTOS, pageable, communityListResponseDTOS.size());
-        } catch(Exception e){
+            return new PageImpl<>(communityListResponseDTOS, pageable, communityPage.getTotalElements());
+        } catch (Exception e) {
             e.printStackTrace();
             return new PageImpl<>(Collections.emptyList());
         }
     }
 
     // 커뮤니티 게시글 카테고리별, 좋아요순 정렬 조회
-    public Page<CommunityListResponseDTO> getPopularCommunintyList(String category, Pageable pageable){
+    public Page<CommunityListResponseDTO> getPopularCommunintyList(String category, Pageable pageable) {
         try {
             Page<Community> communityPage = communityRepository.findAllByCategoryOrderByLikesCount(category, pageable);
             List<CommunityListResponseDTO> communityListResponseDTOS = communityPage.stream()
                     .map(CommunityListResponseDTO::new)
                     .collect(Collectors.toList());
-            return new PageImpl<>(communityListResponseDTOS, pageable, communityListResponseDTOS.size());
-        } catch(Exception e){
+            return new PageImpl<>(communityListResponseDTOS, pageable, communityPage.getTotalElements());
+        } catch (Exception e) {
             e.printStackTrace();
             return new PageImpl<>(Collections.emptyList());
         }
@@ -76,15 +76,16 @@ public class CommunityService {
         User user = userRepository.findByUsername(communityRequestDTO.getUsername())
                 .orElseThrow(()-> new NotFoundMemberException("해당 이메일에 해당하는 회원이 없습니다. : "+ communityRequestDTO.getUsername()));
 
-        Community community = null;
+        Community community = communityRequestDTO.toEntity(user);
         try {
             if(communityRequestDTO.getImgUrl() != null) {
                 String filePath = s3Config.upload(communityRequestDTO.getImgUrl());
                 community = communityRequestDTO.toEntity(user);
                 community.setImgUrl(filePath);
                 //community.setUser(user);
-                communityRepository.save(community);
-            }
+           }
+            communityRepository.save(community);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

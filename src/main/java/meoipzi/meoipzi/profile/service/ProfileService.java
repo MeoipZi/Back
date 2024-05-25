@@ -33,7 +33,7 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
     private final CustomUserDetailsService userDetailsService;
     private String imgS3Url = ""; // s3에 업로드된 프로필 이미지
-    // 프로필 이미지 업로드
+    // 프로필 이미지 업로드: 삭제 메서드도 구현해야함(삭제 이전에는 계속 같은 이미지 적용되도록)
     @Transactional
     public ResponseEntity<?> uploadProfileImage(ProfileImageUploadRequestDto profileImageUploadRequestDto){
         User user = userRepository.findByUsername(profileImageUploadRequestDto.getUsername())

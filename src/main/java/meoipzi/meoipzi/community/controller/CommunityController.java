@@ -11,6 +11,7 @@ import meoipzi.meoipzi.community.repository.CommunityRepository;
 import meoipzi.meoipzi.community.service.CommunityService;
 import meoipzi.meoipzi.outfit.dto.OutfitRequestDTO;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,34 +39,22 @@ public class CommunityController {
     // /communities/latest?category=brand&page=0&size=20
     @GetMapping("/latest")
     public ResponseEntity<?> getLatestListPerCategory(@RequestParam(value = "category") String category,
-                                                      @RequestParam(value = "page")int page,
-                                                      @RequestParam(value = "size") int size){
-        Pageable pageable = PageRequest.of(page, size);
-        // 조회된 커뮤니티 글 리스트 형식 반환
-        Page<CommunityListResponseDTO> latestCommunityPage = communityService.getLatestCommunityList(category, pageable);
-
-        List<List<String>> communityGrid = partitionIntoRows(latestCommunityPage.getContent().
-                stream()
-                .map(CommunityListResponseDTO::getImgUrl)
-                .collect(Collectors.toList()), 2);
-        return ResponseEntity.ok(communityGrid);
+                                                                   @RequestParam(value = "page")int page,
+                                                                   @RequestParam(value = "size") int size) {
+        Pageable pageable =PageRequest.of(page, size);
+        Page<CommunityListResponseDTO> result = communityService.getLatestCommunityList(category, pageable);
+        return ResponseEntity.ok(result);
     }
 
     /* 커뮤니티 게시글 리스트 보기 -> 좋아요순 조회 */
     // /communities/popular?category=brand&page=0&size=20
     @GetMapping("/popular")
     public ResponseEntity<?> getPopularListPerCategory(@RequestParam(value = "category") String category,
-                                                       @RequestParam(value = "page")int page,
-                                                       @RequestParam(value = "size") int size){
+                                                                    @RequestParam(value = "page")int page,
+                                                                    @RequestParam(value = "size") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        // 조회된 커뮤니티 글 리스트 형식 반환
-        Page<CommunityListResponseDTO> latestCommunityPage = communityService.getPopularCommunintyList(category, pageable);
-
-        List<List<String>> communityGrid = partitionIntoRows(latestCommunityPage.getContent().
-                stream()
-                .map(CommunityListResponseDTO::getImgUrl)
-                .collect(Collectors.toList()), 2);
-        return ResponseEntity.ok(communityGrid);
+        Page<CommunityListResponseDTO> result =  communityService.getPopularCommunintyList(category, pageable);
+        return ResponseEntity.ok(result);
     }
 
     /* 커뮤니티 게시글 하나 상세 조회 */
@@ -100,6 +90,7 @@ public class CommunityController {
     @PatchMapping("/{communityId}")
     public ResponseEntity<?> updatePost(@PathVariable Long communityId, CommunityUpdateRequestDTO communityUpdateRequestDTO) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         communityUpdateRequestDTO.setUsername(authentication.getName());
 
         if(authentication.isAuthenticated()){
