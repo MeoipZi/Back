@@ -115,12 +115,4 @@ public class CommunityController {
         else return new ResponseEntity<>("게시글 삭제 권한이 없습니다.", HttpStatus.FORBIDDEN);
     }
 
-    private List<List<String>> partitionIntoRows(List<String> list, int elementsPerRow) {
-        List<List<String>> rows = new ArrayList<>();
-        for (int i = 0; i < list.size(); i += elementsPerRow) {
-            int end = Math.min(i + elementsPerRow, list.size());
-            rows.add(list.subList(i, end));
-        }
-        return rows;
-    }
 }

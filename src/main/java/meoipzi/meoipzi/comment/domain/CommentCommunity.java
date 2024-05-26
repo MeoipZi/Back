@@ -24,7 +24,7 @@ public class CommentCommunity extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false, length = 1000)
-    String content;
+    private String content;
 
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "parent_id")
     private CommentCommunity parentComment;//부모 댓글 나타내는 필드
