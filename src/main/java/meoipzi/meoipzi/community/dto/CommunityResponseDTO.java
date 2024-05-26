@@ -4,12 +4,14 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import meoipzi.meoipzi.comment.domain.CommentCommunity;
+import meoipzi.meoipzi.comment.dto.CommentCommunityResDTO;
 import meoipzi.meoipzi.community.domain.Community;
 
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -25,9 +27,9 @@ public class CommunityResponseDTO {
     private String imgUrl; // 사진 첨부
     private int likesCount; // 좋아요 개수
     private int commentsCount; // 댓글 개수
-    private List<CommentCommunity> comments; // 댓글 리스트를 상세 조회 dto에 실어서 반환
+    private List<CommentCommunityResDTO> comments; // 댓글 리스트를 상세 조회 dto에 실어서 반환
 
-    public CommunityResponseDTO(Community community, List<CommentCommunity> comments) {
+    public CommunityResponseDTO(Community community, List<CommentCommunity> cmtComm) {
         this.communityId = community.getId();
         this.userName = (!community.isAnonymous())? community.getUser().getProfile().getNickname() : "익명";
         this.profileImg = community.getUser().getProfile().getImgUrl(); // 프로필 이미지 랜딩하기
@@ -37,7 +39,9 @@ public class CommunityResponseDTO {
         this.imgUrl = community.getImgUrl();
         this.commentsCount = community.getCommentsCount();
         this.likesCount = community.getLikesCount();
-        this.comments = comments;
+        this.comments = cmtComm.stream()
+                .map(comment -> new CommentCommunityResDTO(comment))
+                .collect(Collectors.toList());
     }
 
 }
