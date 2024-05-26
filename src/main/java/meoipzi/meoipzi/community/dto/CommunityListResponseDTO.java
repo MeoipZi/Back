@@ -35,7 +35,6 @@ public class CommunityListResponseDTO {
     }
 
 
-
     // 문자열 계산 메서드
     private String calculateTimeAgo(LocalDateTime createdAt){
         LocalDateTime now = LocalDateTime.now();

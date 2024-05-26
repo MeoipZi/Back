@@ -26,6 +26,7 @@ public class CommunityResponseDTO {
     private String contents; // 내용
     private String imgUrl; // 사진 첨부
     private int likesCount; // 좋아요 개수
+    private boolean isLiked; // 현재 로그인한 사용자의 좋아요 여부
     private int commentsCount; // 댓글 개수
     private List<CommentCommunityResDTO> comments; // 댓글 리스트를 상세 조회 dto에 실어서 반환
 
@@ -39,6 +40,7 @@ public class CommunityResponseDTO {
         this.imgUrl = community.getImgUrl();
         this.commentsCount = community.getCommentsCount();
         this.likesCount = community.getLikesCount();
+        this.isLiked = false;
         this.comments = cmtComm.stream()
                 .map(comment -> new CommentCommunityResDTO(comment))
                 .collect(Collectors.toList());

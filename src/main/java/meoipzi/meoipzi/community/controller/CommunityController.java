@@ -62,7 +62,9 @@ public class CommunityController {
     @GetMapping("/{communityId}")
     public ResponseEntity<?> getOneCommunity(@PathVariable Long communityId) {
         try {
-            CommunityResponseDTO communityResponseDTO = communityService.viewCommunity(communityId);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            CommunityResponseDTO communityResponseDTO = communityService.viewCommunity(communityId, username);
 
             return new ResponseEntity<>(communityResponseDTO, HttpStatus.OK);
         } catch (Exception e) {

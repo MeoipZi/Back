@@ -22,7 +22,7 @@ public class CommentCommunity extends BaseTimeEntity {
     @Id
     @Column(name="comment_community_id")
     private Long id;
-    
+
     @Column(nullable = false, length = 1000)
     private String content;
 
