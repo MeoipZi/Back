@@ -35,7 +35,7 @@ public class ProfileService {
 
     // 초기 프로필 등록
     @Transactional
-    public ResponseEntity<?> registerProfile(ProfileRegisterRequestDto profileRegisterRequestDto) throws IOException {
+    public ResponseEntity<?> registerProfile(ProfileRegisterRequestDto profileRegisterRequestDto) {
         User user = userRepository.findByUsername(profileRegisterRequestDto.getUsername())
                 .orElseThrow(()-> new NotFoundMemberException("해당 이메일에 해당하는 회원이 없습니다. : "+ profileRegisterRequestDto.getUsername()));
 
@@ -45,10 +45,8 @@ public class ProfileService {
                 String filePath = s3Config.upload(profileRegisterRequestDto.getImgUrl());
                 newProfile = profileRegisterRequestDto.toEntity(user);
                 newProfile.setImgUrl(filePath);
-                //community.setUser(user);
             }
             profileRepository.save(newProfile);
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
