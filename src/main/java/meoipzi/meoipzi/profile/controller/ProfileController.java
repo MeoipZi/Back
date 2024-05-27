@@ -27,7 +27,7 @@ public class ProfileController {
 
     // 회원가입 직후 초기 프로필 설정
     @RequestMapping("/settings")
-    public ResponseEntity<?> setProfile(@RequestBody ProfileRegisterRequestDto profileRegisterRequestDto) throws IOException {
+    public ResponseEntity<?> setProfile(ProfileRegisterRequestDto profileRegisterRequestDto) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         profileRegisterRequestDto.setUsername(authentication.getName());
         if(authentication.isAuthenticated()) {
