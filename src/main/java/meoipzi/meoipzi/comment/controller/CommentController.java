@@ -90,7 +90,7 @@ public class CommentController {
 
     //커뮤니티 댓글 + 대댓글 생성 - 로그인된 사용자가 접근
     @PostMapping("/communities/{communityId}/comments")
-    public ResponseEntity<?> saveCommentCommunity(@PathVariable("communityId") Long communityId, @RequestBody CommentCommunityRecDTO commentCommunityRecDTO) throws Exception {
+    public ResponseEntity<?> saveCommentCommunity(@PathVariable("communityId") Long communityId,  CommentCommunityRecDTO commentCommunityRecDTO) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         commentCommunityRecDTO.setUsername(authentication.getName());
         if(commentCommunityRecDTO.getContent() == null || commentCommunityRecDTO.getContent().isEmpty()){
@@ -102,7 +102,7 @@ public class CommentController {
 
     //커뮤니티 대댓글 생성 -로그인된 사용자가 접근
     @PostMapping("/communities/{communityId}/replies")
-    public ResponseEntity<?> saveReplyCommunity(@PathVariable("communityId") Long communityId, @RequestBody CommentReplyRecDTO commentReplyRecDTO) throws Exception {
+    public ResponseEntity<?> saveReplyCommunity(@PathVariable("communityId") Long communityId,  CommentReplyRecDTO commentReplyRecDTO) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         commentReplyRecDTO.setUsername(authentication.getName());
         return commentCommunityService.saveReply(communityId, commentReplyRecDTO);
