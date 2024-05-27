@@ -120,7 +120,7 @@ public class CommentController {
         }
     }
 
-    // 커뮤니티 대댓글 삭제 - 로그인된 사용자가 접근
+    // 커뮤니티 대댓글 삭제 - 로그인된 사용자가 접근/**/
     @DeleteMapping("/communities/{communityId}/replies/{commentId}")
     public ResponseEntity<?> deleteReplyCommunity(@PathVariable("commentId") Long commentId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
