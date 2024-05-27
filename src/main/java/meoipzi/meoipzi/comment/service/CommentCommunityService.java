@@ -34,6 +34,7 @@ public class CommentCommunityService {
         communityRepository.save(community);
         //String content = commentCommunityRecDTO.getContent();
         CommentCommunity commentCommunity = commentCommunityRecDTO.toEntity(user,community);
+        commentCommunity.setContent(commentCommunity.getContent());
         commentCommunityRepository.save(commentCommunity);
         return ResponseEntity.ok(commentCommunityRecDTO);
     }

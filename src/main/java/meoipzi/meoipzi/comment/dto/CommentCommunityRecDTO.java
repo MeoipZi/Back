@@ -16,6 +16,7 @@ public class CommentCommunityRecDTO {
     private String content; // 댓글 내용
     //private Long parentCommentId; // 대댓글의 경우 부모 댓글의 id
 
+
     public CommentCommunity toEntity(User user, Community community) {
         return CommentCommunity.builder()
                 .content(content)

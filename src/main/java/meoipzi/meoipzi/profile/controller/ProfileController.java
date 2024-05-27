@@ -3,7 +3,6 @@ package meoipzi.meoipzi.profile.controller;
 import lombok.RequiredArgsConstructor;
 import meoipzi.meoipzi.login.domain.User;
 import meoipzi.meoipzi.login.repository.UserRepository;
-import meoipzi.meoipzi.profile.dto.ProfileImageUploadRequestDto;
 import meoipzi.meoipzi.profile.dto.ProfileRegisterRequestDto;
 import meoipzi.meoipzi.profile.dto.ProfileResponseDto;
 import meoipzi.meoipzi.profile.dto.ProfileUpdateRequestDto;
@@ -25,18 +24,6 @@ import java.util.Optional;
 public class ProfileController {
     private final ProfileService profileService;
     private final UserRepository userRepository;
-    // 초기 프로필 설정 시 이미지 업로드 API
-    @PostMapping("/upload")
-    public ResponseEntity<?> uploadImage(ProfileImageUploadRequestDto profileImageUploadRequestDto){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        profileImageUploadRequestDto.setUsername(authentication.getName());
-        if(authentication.isAuthenticated()) {
-            return profileService.uploadProfileImage(profileImageUploadRequestDto);
-        }
-        else {
-            return new ResponseEntity<>("Permission denied", HttpStatus.FORBIDDEN);
-        }
-    }
 
     // 회원가입 직후 초기 프로필 설정
     @RequestMapping("/settings")
