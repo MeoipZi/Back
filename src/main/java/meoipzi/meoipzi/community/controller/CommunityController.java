@@ -20,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -75,12 +76,13 @@ public class CommunityController {
 
         /* 게시글 등록 - 사용자 로그인 여부 필요 */
     @PostMapping("")
-    public ResponseEntity<?> createPost(CommunityRequestDTO communityRequestDTO){
+    public ResponseEntity<?> createPost(@ModelAttribute CommunityRequestDTO communityRequestDTO,
+                                        @RequestParam(value = "imgUrl", required = false) List<MultipartFile> files){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         communityRequestDTO.setUsername(authentication.getName()); // 현재 로그인한 작성자의 이름으로 작성하기
 
         if(authentication.isAuthenticated()) {
-            return communityService.saveCommunity(communityRequestDTO);
+            return communityService.saveCommunity(communityRequestDTO, files);
         }
         else {
             return new ResponseEntity<>("로그인하지 않았으므로 게시글 작성 권한이 없습니다.", HttpStatus.FORBIDDEN);
@@ -90,13 +92,15 @@ public class CommunityController {
 
     /* 게시글 수정 - 사용자 로그인 여부 필요 */
     @PatchMapping("/{communityId}")
-    public ResponseEntity<?> updatePost(@PathVariable Long communityId, CommunityUpdateRequestDTO communityUpdateRequestDTO) throws IOException {
+    public ResponseEntity<?> updatePost(@PathVariable Long communityId,
+                                        @ModelAttribute CommunityUpdateRequestDTO communityUpdateRequestDTO,
+                                        @RequestParam(value = "imgUrl", required = false)List<MultipartFile> files) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         communityUpdateRequestDTO.setUsername(authentication.getName());
 
         if(authentication.isAuthenticated()){
-            return communityService.updateCommunity(communityId, communityUpdateRequestDTO);
+            return communityService.updateCommunity(communityId, communityUpdateRequestDTO, files);
         }
         else {
             return new ResponseEntity<>("커뮤니티 게시글 수정 권한이 없습니다.", HttpStatus.FORBIDDEN);

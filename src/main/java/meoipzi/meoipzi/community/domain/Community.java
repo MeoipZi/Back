@@ -14,6 +14,7 @@ import meoipzi.meoipzi.login.domain.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "COMMUNITY")
@@ -36,8 +37,8 @@ public class Community extends BaseEntity {
     @Column(name = "CONTENTS")
     private String contents;
 
-    @Column(name = "IMG_URL")
-    private String imgUrl;
+//    @Column(name = "IMG_URL")
+//    private String imgUrl;
 
     @Column(name = "CATEGORY")
     private String category;
@@ -57,11 +58,22 @@ public class Community extends BaseEntity {
     @Column(name = "CMT_COUNT")
     private Integer commentsCount=0; // 댓글 개수
 
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> imgUrl = new ArrayList<>();
+
+    public void addImage(Image image){
+        this.imgUrl.add(image);
+        image.setCommunity(this);
+    }
+    public List<String> getImgUrl() {
+        return imgUrl.stream()
+                .map(Image::getFilePath)
+                .collect(Collectors.toList());
+    }
     @Builder
-    public Community(String imgUrl, User user, boolean isAnonymous,
+    public Community(User user, boolean isAnonymous,
                      String title, String contents, String category) {
         this.user = user;
-        this.imgUrl = imgUrl;
         this.title = title;
         this.isAnonymous = isAnonymous;
         this.contents = contents;

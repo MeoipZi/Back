@@ -6,6 +6,7 @@ import meoipzi.meoipzi.comment.repository.CommentCommunityRepository;
 import meoipzi.meoipzi.common.config.S3Config;
 import meoipzi.meoipzi.common.excepiton.NotFoundMemberException;
 import meoipzi.meoipzi.community.domain.Community;
+import meoipzi.meoipzi.community.domain.Image;
 import meoipzi.meoipzi.community.dto.CommunityListResponseDTO;
 import meoipzi.meoipzi.community.dto.CommunityRequestDTO;
 import meoipzi.meoipzi.community.dto.CommunityResponseDTO;
@@ -26,13 +27,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -76,17 +75,20 @@ public class CommunityService {
 /**/
     // 커뮤니티 글 등록 -> 등록 시 해당 커뮤니티로 리다이렉트
     @Transactional
-    public ResponseEntity<?> saveCommunity(CommunityRequestDTO communityRequestDTO) {
+    public ResponseEntity<?> saveCommunity(CommunityRequestDTO communityRequestDTO, List<MultipartFile> files) {
         User user = userRepository.findByUsername(communityRequestDTO.getUsername())
                 .orElseThrow(()-> new NotFoundMemberException("해당 이메일에 해당하는 회원이 없습니다. : "+ communityRequestDTO.getUsername()));
 
         Community community = communityRequestDTO.toEntity(user);
         try {
-            if(communityRequestDTO.getImgUrl() != null) {
-                String filePath = s3Config.upload(communityRequestDTO.getImgUrl());
-                community = communityRequestDTO.toEntity(user);
-                community.setImgUrl(filePath);
-                //community.setUser(user);
+            if(files != null & !files.isEmpty()) {
+                for(MultipartFile file : files){
+                    String filePath = s3Config.upload(file);
+                    Image image = new Image();
+                    image.setFilePath(filePath);
+
+                    community.addImage(image);
+                }
            }
             communityRepository.save(community);
 
@@ -104,17 +106,22 @@ public class CommunityService {
 
     // 커뮤니티 글 수정
     @Transactional
-    public ResponseEntity<?> updateCommunity(Long communityId, CommunityUpdateRequestDTO communityUpdateRequestDTO) throws IOException {
+    public ResponseEntity<?> updateCommunity(Long communityId, CommunityUpdateRequestDTO communityUpdateRequestDTO, List<MultipartFile> files) {
         User user = userRepository.findByUsername(communityUpdateRequestDTO.getUsername())
                 .orElseThrow(()-> new NotFoundMemberException("해당 사용자를 찾을 수 없습니다."));
 
-        try {
-            Community originalCommunity = communityRepository.findById(communityId)
-                    .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+        Community originalCommunity = communityRepository.findById(communityId)
+                .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
 
+        try {
+            originalCommunity.getImgUrl().clear();
             if (communityUpdateRequestDTO.getImgUrl() != null) {
-                String filePath = s3Config.upload(communityUpdateRequestDTO.getImgUrl());
-                originalCommunity.setImgUrl(filePath);
+                for(MultipartFile file : files){
+                    String filePath = s3Config.upload(file);
+                    Image image = new Image();
+                    image.setFilePath(filePath);
+                    originalCommunity.addImage(image);
+                }
             }
             originalCommunity.setCategory(communityUpdateRequestDTO.getCategory());
             originalCommunity.setTitle(communityUpdateRequestDTO.getTitle());

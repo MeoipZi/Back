@@ -8,6 +8,8 @@ import lombok.Setter;
 import meoipzi.meoipzi.community.domain.Community;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Data
@@ -17,8 +19,13 @@ public class CommunityUpdateRequestDTO {
     private String username;
 
     private String title; // 제목
+
     private String contents; // 내용
+
     @JsonIgnore
-    private MultipartFile imgUrl; // 사진 첨부
+    private List<MultipartFile> imgUrl; // 첨부 이미지 파일
+
+//    private List<Long> deleteImageIds; // 삭제할 이미지 파일들
+
     private String category; // 카테고리
 }

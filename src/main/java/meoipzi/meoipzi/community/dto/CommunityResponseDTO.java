@@ -6,6 +6,7 @@ import lombok.Setter;
 import meoipzi.meoipzi.comment.domain.CommentCommunity;
 import meoipzi.meoipzi.comment.dto.CommentCommunityResDTO;
 import meoipzi.meoipzi.community.domain.Community;
+import meoipzi.meoipzi.community.domain.Image;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -24,7 +25,7 @@ public class CommunityResponseDTO {
     private LocalDateTime createdAt; // 글 작성 일자
     private String title; // 커뮤니티 글 제목
     private String contents; // 내용
-    private String imgUrl; // 사진 첨부
+    private List<String> imgUrl; // 첨부한 사진 리스트
     private int likesCount; // 좋아요 개수
     private boolean isLiked; // 현재 로그인한 사용자의 좋아요 여부
     private int commentsCount; // 댓글 개수
