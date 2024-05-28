@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/meoipzi")
-public class HomepageController {
+public class HomePageController {
 
     private final HomePageService homePageService;
     // 빈티지 소식 등록하기 - POST /meoipzi/news
@@ -113,7 +113,7 @@ public class HomepageController {
     @GetMapping("/partners/{partnersId}")
     public ResponseEntity<?> linkToOnePartner(@PathVariable("partnersId") Long partnersId){
         try {
-            PartnersDetailResponseDTO partnersDetailResponseDTO = homePageService.clickPartners(partnersId);
+            PartnersResponseDTO partnersDetailResponseDTO = homePageService.clickPartners(partnersId);
             return new ResponseEntity<>(partnersDetailResponseDTO, HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<>("Failed to retreive partner information", HttpStatus.INTERNAL_SERVER_ERROR);

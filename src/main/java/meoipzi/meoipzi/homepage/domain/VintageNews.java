@@ -25,7 +25,7 @@ public class VintageNews extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name="user_id")
     private User user;
-    @JsonIgnore
+
     private String imgUrl;
 
     @Builder

@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,10 +49,11 @@ public class HomePageService {
         User user = userRepository.findByUsername(vintageNewsRequestDTO.getUsername())
                 .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + vintageNewsRequestDTO.getUsername()));
 
+        VintageNews vintageNews = null;
         try{
             if(vintageNewsRequestDTO.getImgUrl() != null){
                 String filePath = s3Config.upload(vintageNewsRequestDTO.getImgUrl());
-                VintageNews vintageNews = vintageNewsRequestDTO.toEntity(user); //DTO를 엔티티로 변환
+                vintageNews = vintageNewsRequestDTO.toEntity(user); //DTO를 엔티티로 변환
                 vintageNews.setImgUrl(filePath);
                 vintageNewsRepository.save(vintageNews);
             }
@@ -59,7 +61,7 @@ public class HomePageService {
         }catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return ResponseEntity.ok(vintageNewsRequestDTO);
+        return ResponseEntity.ok(clickVintage(Objects.requireNonNull(vintageNews).getId()));
     }
 
     // 관리자 -> 제휴기업 정보 등록하기
@@ -68,20 +70,21 @@ public class HomePageService {
         User user = userRepository.findByUsername(partnersRequestDTO.getUsername())
                 .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + partnersRequestDTO.getUsername()));
 
+        Partners newPartner = null;
         try{
             if(partnersRequestDTO.getImgUrl() != null){
                 String filePath = s3Config.upload(partnersRequestDTO.getImgUrl());
-                Partners partners = partnersRequestDTO.toEntity(user); //DTO를 엔티티로 변환
-                partners.setImgUrl(filePath);
-                partners.setShopName(partnersRequestDTO.getShopName());
-                partners.setShopUrl(partners.getShopUrl());
-                partnersRepository.save(partners);
+                newPartner = partnersRequestDTO.toEntity(user); //DTO를 엔티티로 변환
+                newPartner.setImgUrl(filePath);
+                newPartner.setShopName(partnersRequestDTO.getShopName());
+                newPartner.setShopUrl(partnersRequestDTO.getShopUrl());
+                partnersRepository.save(newPartner);
             }
 
         }catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return ResponseEntity.ok(partnersRequestDTO);
+        return ResponseEntity.ok(clickPartners(Objects.requireNonNull(newPartner).getId()));
     }
 
     // 관리자 -> 빈티지 소식 삭제하기
@@ -102,7 +105,6 @@ public class HomePageService {
     public HomePageDTO getHomepageInfo() {
         List<VintageNews> vintageNewsList = vintageNewsRepository.findAllByOrderByCreatedAtDesc();
         List<Partners> partnersList = partnersRepository.findAll();
-        List<Outfit> outfitList = outfitRepository.findAll();
 
         // VintageNews를 VintageNewsResponseDTO로 변환
         List<VintageNewsResponseDTO> vintageNewsResponseDTOList = vintageNewsList.stream()
@@ -144,11 +146,11 @@ public class HomePageService {
 
     // 제휴기업 연결 링크
     @Transactional
-    public PartnersDetailResponseDTO clickPartners(Long partnersId){
+    public PartnersResponseDTO clickPartners(Long partnersId){
         Partners partners = partnersRepository.findById(partnersId)
                 .orElseThrow(() -> new RuntimeException("해당 ID의 제휴기업 링크에 연결할 수 없습니다."));
 
-        return new PartnersDetailResponseDTO(partners);
+        return new PartnersResponseDTO(partners);
     }
 
 }
