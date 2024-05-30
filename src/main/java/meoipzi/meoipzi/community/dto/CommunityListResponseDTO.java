@@ -29,7 +29,7 @@ public class CommunityListResponseDTO {
         this.likesCount = community.getLikesCount();
         this.commentsCount = community.getCommentsCount();
         this.title = community.getTitle();
-        this.imgUrl = community.getImgUrl();
+        this.imgUrl = community.getImgUrl().get(0); // 게시글의 사진 리스트 중 첫번째 사진 파일 반환
         this.createdAt = community.getCreatedAt();
         this.formattedCreatedAt = calculateTimeAgo(createdAt);
     }
