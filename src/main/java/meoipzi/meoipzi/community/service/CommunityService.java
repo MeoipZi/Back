@@ -81,13 +81,14 @@ public class CommunityService {
 
         Community community = communityRequestDTO.toEntity(user);
         try {
-            if(files != null & !files.isEmpty()) {
-                for(MultipartFile file : files){
-                    String filePath = s3Config.upload(file);
-                    Image image = new Image();
-                    image.setFilePath(filePath);
-
-                    community.addImage(image);
+            if (files != null && !files.isEmpty()) {
+                for (MultipartFile file : files) {
+                    if (!file.isEmpty()) {
+                        String filePath = s3Config.upload(file);
+                        Image image = new Image();
+                        image.setFilePath(filePath);
+                        community.addImage(image);
+                    }
                 }
             }
             communityRepository.save(community);
