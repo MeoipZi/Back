@@ -14,6 +14,8 @@ import meoipzi.meoipzi.profile.domain.Profile;
 public class CommentCommunityResDTO {
     private String username;
     private String content;
+    private Long id;
+    private Long parentId;
 
     public CommentCommunityResDTO(CommentCommunity commentCommunity){
         //this.username = commentCommunity.getUsername();
@@ -32,5 +34,7 @@ public class CommentCommunityResDTO {
         }
 
         this.content = commentCommunity.getContent();
+        this.id  = commentCommunity.getId();
+        this.parentId = commentCommunity.getParentComment() != null ? commentCommunity.getParentComment().getId() : null;
     }
 }
