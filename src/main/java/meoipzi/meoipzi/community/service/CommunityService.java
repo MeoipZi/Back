@@ -72,7 +72,7 @@ public class CommunityService {
             return new PageImpl<>(Collections.emptyList());
         }
     }
-/**/
+    /**/
     // 커뮤니티 글 등록 -> 등록 시 해당 커뮤니티로 리다이렉트
     @Transactional
     public ResponseEntity<?> saveCommunity(CommunityRequestDTO communityRequestDTO, List<MultipartFile> files) {
@@ -81,15 +81,16 @@ public class CommunityService {
 
         Community community = communityRequestDTO.toEntity(user);
         try {
-            if(files != null & !files.isEmpty()) {
-                for(MultipartFile file : files){
-                    String filePath = s3Config.upload(file);
-                    Image image = new Image();
-                    image.setFilePath(filePath);
-
-                    community.addImage(image);
+            if (files != null && !files.isEmpty()) {
+                for (MultipartFile file : files) {
+                    if (!file.isEmpty()) {
+                        String filePath = s3Config.upload(file);
+                        Image image = new Image();
+                        image.setFilePath(filePath);
+                        community.addImage(image);
+                    }
                 }
-           }
+            }
             communityRepository.save(community);
 
         } catch (IOException e) {

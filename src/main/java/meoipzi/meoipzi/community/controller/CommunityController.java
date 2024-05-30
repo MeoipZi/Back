@@ -40,8 +40,8 @@ public class CommunityController {
     // /communities/latest?category=brand&page=0&size=20
     @GetMapping("/latest")
     public ResponseEntity<?> getLatestListPerCategory(@RequestParam(value = "category") String category,
-                                                                   @RequestParam(value = "page")int page,
-                                                                   @RequestParam(value = "size") int size) {
+                                                      @RequestParam(value = "page")int page,
+                                                      @RequestParam(value = "size") int size) {
         Pageable pageable =PageRequest.of(page, size);
         Page<CommunityListResponseDTO> result = communityService.getLatestCommunityList(category, pageable);
         return ResponseEntity.ok(result);
@@ -51,8 +51,8 @@ public class CommunityController {
     // /communities/popular?category=brand&page=0&size=20
     @GetMapping("/popular")
     public ResponseEntity<?> getPopularListPerCategory(@RequestParam(value = "category") String category,
-                                                                    @RequestParam(value = "page")int page,
-                                                                    @RequestParam(value = "size") int size) {
+                                                       @RequestParam(value = "page")int page,
+                                                       @RequestParam(value = "size") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<CommunityListResponseDTO> result =  communityService.getPopularCommunintyList(category, pageable);
         return ResponseEntity.ok(result);
@@ -74,7 +74,7 @@ public class CommunityController {
     }
 
 
-        /* 게시글 등록 - 사용자 로그인 여부 필요 */
+    /* 게시글 등록 - 사용자 로그인 여부 필요 */
     @PostMapping("")
     public ResponseEntity<?> createPost(@ModelAttribute CommunityRequestDTO communityRequestDTO,
                                         @RequestParam(value = "imgUrl", required = false) List<MultipartFile> files){
