@@ -26,6 +26,9 @@ public class CommentCommunity extends BaseTimeEntity {
     @Column(nullable = false, length = 1000)
     private String content;
 
+    @Column(nullable = false)
+    private String username; //사용자 이름 추가
+
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "parent_id")
     private CommentCommunity parentComment;//부모 댓글 나타내는 필드
 
@@ -39,9 +42,10 @@ public class CommentCommunity extends BaseTimeEntity {
     private Community community;
 
     @Builder
-    public CommentCommunity(String content,User user, Community community){
+    public CommentCommunity(String content,User user, Community community,String username){
         this.content = content;
         this.user = user;
+        this.username = username;
         this.community = community;
     }
 }

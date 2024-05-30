@@ -9,10 +9,11 @@ import meoipzi.meoipzi.comment.domain.CommentCommunity;
 @Setter
 @NoArgsConstructor
 public class CommentCommunityResDTO {
-    //private String nickname;
+    private String username;
     private String content;
 
     public CommentCommunityResDTO(CommentCommunity commentCommunity){
+        this.username = commentCommunity.getUsername();
         this.content = commentCommunity.getContent();
     }
 }

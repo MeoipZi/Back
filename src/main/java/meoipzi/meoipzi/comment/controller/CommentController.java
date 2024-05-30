@@ -88,7 +88,7 @@ public class CommentController {
     }
 
 
-    //커뮤니티 댓글 + 대댓글 생성 - 로그인된 사용자가 접근
+    //커뮤니티 댓글 생성 - 로그인된 사용자가 접근
     @PostMapping("/communities/{communityId}/comments")
     public ResponseEntity<?> saveCommentCommunity(@PathVariable("communityId") Long communityId,  CommentCommunityRecDTO commentCommunityRecDTO) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -18,6 +18,7 @@ public class CommentReplyRecDTO {
     public CommentCommunity toEntity(User user, Community community) {
         return CommentCommunity.builder()
                 .content(content)
+                .username(username)
                 .community(community)
                 .user(user)
                 .build();
