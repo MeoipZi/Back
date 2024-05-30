@@ -72,7 +72,7 @@ public class CommunityService {
             return new PageImpl<>(Collections.emptyList());
         }
     }
-/**/
+    /**/
     // 커뮤니티 글 등록 -> 등록 시 해당 커뮤니티로 리다이렉트
     @Transactional
     public ResponseEntity<?> saveCommunity(CommunityRequestDTO communityRequestDTO, List<MultipartFile> files) {
@@ -89,7 +89,7 @@ public class CommunityService {
 
                     community.addImage(image);
                 }
-           }
+            }
             communityRepository.save(community);
 
         } catch (IOException e) {
