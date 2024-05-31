@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -71,12 +73,23 @@ public class CommentCommunityService {
         community.setCommentsCount(community.getCommentsCount()-1);
         communityRepository.save(community);
 
+        // 대댓글 확인
+        List<CommentCommunity> replies = commentCommunityRepository.findByParentComment(comment);
+        if (replies.isEmpty()) {
+            // 대댓글이 없으면 댓글 삭제
+            commentCommunityRepository.delete(comment);
+        } else {
+            // 대댓글이 있으면 댓글 내용만 빈 내용으로 변경
+            comment.setContent("삭제된 댓글입니다.");
+            commentCommunityRepository.save(comment);
+        }
+
         // parentId가 null이 아닌 경우에만 삭제
-        if (comment.getParentComment() == null) {
+        /*if (comment.getParentComment() == null) {
             commentCommunityRepository.delete(comment);
         } else {
             throw new RuntimeException("댓글은 부모댓글ID가 없어야 합니다.");
-        }
+        }*/
     }
 
     @Transactional

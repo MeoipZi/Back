@@ -24,4 +24,7 @@ public interface CommentCommunityRepository extends JpaRepository<CommentCommuni
 
 
     List<CommentCommunity> findByCommunityId(Long communityId);
+
+    // 부모 댓글을 기준으로 대댓글 조회
+    List<CommentCommunity> findByParentComment(CommentCommunity parentComment);
 }
