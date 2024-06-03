@@ -25,6 +25,7 @@ import meoipzi.meoipzi.scrap.repository.ScrapRepository;
 import meoipzi.meoipzi.shortform.domain.ShortForm;
 import meoipzi.meoipzi.shortform.repository.ShortFormRepository;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -234,6 +235,8 @@ public class MyPageService {
         }
         return new ResponseEntity<>(cmtComms, HttpStatus.OK);
     }
+
+
 
     //outfit, product
     @Transactional
