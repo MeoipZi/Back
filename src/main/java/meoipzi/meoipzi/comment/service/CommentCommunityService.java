@@ -73,7 +73,7 @@ public class CommentCommunityService {
         community.setCommentsCount(community.getCommentsCount()-1);
         communityRepository.save(community);
 
-        // 대댓글 확인
+        // 대댓글 확인 //
         List<CommentCommunity> replies = commentCommunityRepository.findByParentComment(comment);
         if (replies.isEmpty()) {
             // 대댓글이 없으면 댓글 삭제
