@@ -12,6 +12,7 @@ public class ProductResponseDTO {
     private String title;
     private Long price;
     private String shopUrl;
+    private boolean scrapOrNot;
 
     public ProductResponseDTO(Product product){
         this.imgUrl =product.getImgUrl();
@@ -19,7 +20,10 @@ public class ProductResponseDTO {
         this.title = product.getTitle();
         this.price = product.getPrice();
         this.shopUrl = product.getShopUrl();
+        this.scrapOrNot = false;
     }
 
-
+    public void setScrapOrNot(boolean scrapOrNot) {
+        this.scrapOrNot = scrapOrNot;
+    }
 }

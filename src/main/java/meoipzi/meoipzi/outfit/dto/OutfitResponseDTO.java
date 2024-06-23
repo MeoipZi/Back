@@ -16,11 +16,8 @@ public class OutfitResponseDTO {
     //코디
     private String imgUrl;
     private String content;
-    //private Long modelHeight;
-    //private Long modelWeight;
-    //private String modelInstagramId;
     private boolean likeOrNot;
-
+    private boolean scrapOrNot;
 
     //상품
     private List<ProductListResponseDTO> productListResponseDTOS;
@@ -28,18 +25,12 @@ public class OutfitResponseDTO {
     public OutfitResponseDTO(Outfit outfit){
         this.imgUrl = outfit.getImgUrl();
         this.content = outfit.getContent();
-        //this.modelHeight = outfit.getModelHeight();
-        //this.modelWeight = outfit.getModelWeight();
-        //this.modelInstagramId = outfit.getModelInstagramId();
         this.likeOrNot = false;
+        this.scrapOrNot = false;
     }
 
     public void setProducts(List<ProductListResponseDTO> productListResponseDTOS){
         this.productListResponseDTOS = productListResponseDTOS;
     }
-
-
-
-
 
 }

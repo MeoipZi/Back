@@ -49,7 +49,8 @@ public class ProductController {
      @GetMapping("/products/{productId}")
      public ResponseEntity<?> findOneProduct(@PathVariable("productId") Long productId) {
          try {
-             ProductResponseDTO productResponseDTO = productService.findOneProduct(productId);
+             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+             ProductResponseDTO productResponseDTO = productService.findOneProduct(productId, authentication.getName());
              return new ResponseEntity<>(productResponseDTO, HttpStatus.OK);
          } catch (Exception e) {
              return new ResponseEntity<>("Failed to retrieve product", HttpStatus.INTERNAL_SERVER_ERROR);
