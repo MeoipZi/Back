@@ -75,7 +75,7 @@ public class ProductController {
             return new ResponseEntity<>("Permission denied", HttpStatus.FORBIDDEN);
         }
     }
-
+/**/
     //http://localhost:8080/outfits/latest?category=아우터&page=0&size=20
     // 한 카테고리에 어떤 상품들이 있는지 조회하는 화면 [기본 : 최신순 조회]
 
