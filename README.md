@@ -113,8 +113,8 @@
 | DELETE | 커뮤니티 글 삭제 | /communtiies/{communityId} |
 | PATCH | 커뮤니티 글 수정 | /communities/{communtiyId} |
 | GET | 커뮤니티 글 상세 조회 |/communities/{communityId} |
-| GET | 커뮤니티 카테고리별 최신순 조회 | /communities/latest?category={categoryName}&page={pageNum}&size={size) |
-| GET | 커뮤니티 카테고리별 인기순 조회 | /communities/popular?category={categoryName}&page={pageNum}&size={size) |
+| GET | 커뮤니티 카테고리별 최신순 조회 | /communities/latest?category={categoryName}&page={pageNum}&size={size} |
+| GET | 커뮤니티 카테고리별 인기순 조회 | /communities/popular?category={categoryName}&page={pageNum}&size={size} |
 | POST | 커뮤니티 글 좋아요 등록/삭제 |/communities/{communityId}/like |
 | POST | 커뮤니티 글 댓글 등록 |/communities/{communityId}/comments |
 | DELETE | 커뮤니티 글 댓글 삭제 |/communities/{communityId}/comments/{commentId} |
@@ -130,7 +130,7 @@
 | PATCH | 숏폼 글 수정 | /shortforms/{shortformId} |
 | GET | 숏폼 글 1개 상세 조회 |/shortforms/{shortformId} |
 | GET | 숏폼 최신순 조회 | /shortforms/latest?page={pageNum}&size={size} |
-| GET | 숏폼 인기순 조회 | /shortforms/popular?page={pageNum}&size={size) |
+| GET | 숏폼 인기순 조회 | /shortforms/popular?page={pageNum}&size={size} |
 | POST | 숏폼 좋아요 등록/삭제 |/shortforms/{shortformId}/like |
 | POST | 숏폼 댓글 등록 |/shortforms/{shortformId}/comments |
 | PUT | 숏폼 댓글 수정 |/shortforms/{shortformId}/comments/{commentId} |
