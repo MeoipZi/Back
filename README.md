@@ -32,7 +32,7 @@
 | ------- | --- | --- |
 | POST | 초기 회원가입 시 프로필 설정 |/profiles/settings |
 | PATCH | 프로필 정보 수정 | /profiles/{profileId} |
-| GET | 프로필 정보 조회 | /profiles/{profileId} |
+| GET | 프로필 정보 조회 | /profiles/info |
 
 ---
 ### 🏠 Home Page: `/meoipzi`
@@ -110,7 +110,7 @@
 | Method | Description | URI |
 | ------- | --- | --- |
 | POST | 커뮤니티 글 등록 |/communities |
-| DELETE | 커뮤니티 글 삭제 | /communtiies/{communityId} |
+| DELETE | 커뮤니티 글 삭제 | /communities/{communityId} |
 | PATCH | 커뮤니티 글 수정 | /communities/{communtiyId} |
 | GET | 커뮤니티 글 상세 조회 |/communities/{communityId} |
 | GET | 커뮤니티 카테고리별 최신순 조회 | /communities/latest?category={categoryName}&page={pageNum}&size={size} |
