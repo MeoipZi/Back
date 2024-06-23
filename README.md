@@ -17,6 +17,10 @@
 - MySQL
 - AWS RDS, EC2
 
+## ERD 설계
+<img width="6000" alt="image" src="https://github.com/MeoipZi/MeoipZi-BE/assets/96698362/835d22ae-0e6e-4a46-8f8c-384236e0721d">
+
+
 ## API 명세서
 ---
 ### 👤 회원가입 & 로그인:  `/api`
