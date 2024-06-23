@@ -53,9 +53,6 @@ public class Outfit extends BaseTimeEntity {
     private List<GenreOutfit> genreOutfits = new ArrayList<>();
 
 
-
-
-
     @Builder
     public Outfit( String imgUrl, String content,  Long modelHeight,  Long modelWeight,String modelInstagramId, String modelGender, User user){
         this.imgUrl = imgUrl;

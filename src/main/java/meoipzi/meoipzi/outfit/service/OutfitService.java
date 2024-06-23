@@ -15,6 +15,7 @@ import meoipzi.meoipzi.outfit.domain.Outfit;
 import meoipzi.meoipzi.product.dto.ProductListResponseDTO;
 import meoipzi.meoipzi.outfit.repository.OutfitRepository;
 import meoipzi.meoipzi.product.service.ProductService;
+import meoipzi.meoipzi.scrap.repository.ScrapRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +41,7 @@ public class OutfitService {
 
     private final ProductService productService;
     private final HeartRepository heartRepository;
+    private final ScrapRepository scrapRepository;
 
     //코디 등록
     @Transactional
@@ -106,7 +108,8 @@ public class OutfitService {
         outfitResponseDTO.setProducts(productListResponseDTOS);
         if(heartRepository.findByUserAndOutfit(user, outfit).isPresent())
             outfitResponseDTO.setLikeOrNot(true);
-
+        if(scrapRepository.findByUserAndOutfit(user, outfit).isPresent())
+            outfitResponseDTO.setScrapOrNot(true);
         return outfitResponseDTO;
     }
 

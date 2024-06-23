@@ -13,6 +13,7 @@ import meoipzi.meoipzi.product.dto.ProductResponseDTO;
 import meoipzi.meoipzi.outfit.repository.OutfitRepository;
 import meoipzi.meoipzi.product.dto.ProductTotalResponseDTO;
 import meoipzi.meoipzi.product.repository.ProductRepository;
+import meoipzi.meoipzi.scrap.repository.ScrapRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +36,7 @@ public class ProductService {
     private final UserRepository userRepository;
     private final S3Config s3Config;
     private final OutfitRepository outfitRepository;
+    private final ScrapRepository scrapRepository;
 
     @Transactional
     public ResponseEntity<?> saveProduct(ProductRequestDTO productRequestDTO){
@@ -61,11 +63,16 @@ public class ProductService {
         return ResponseEntity.ok(productRequestDTO);
     }
 
-    public ProductResponseDTO findOneProduct(Long productId){
+    public ProductResponseDTO findOneProduct(Long productId, String username){
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("해당 ID의 제품을 찾을 수 없습니다."));
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundMemberException("Could not found username : " + username));
 
-        return new ProductResponseDTO(product);
+        ProductResponseDTO productResponseDTO = new ProductResponseDTO(product);
+        if(scrapRepository.findByUserAndProduct(user, product).isPresent())
+            productResponseDTO.setScrapOrNot(true);
+        return productResponseDTO;
     }
 
     //outfitId와 같은 3개의 상품 가져오기 // service에 위치함.
