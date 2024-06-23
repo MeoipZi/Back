@@ -7,9 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Entity
 @Table(name = "PROFILE")
-@Getter
-@Setter
-@AllArgsConstructor
+@Getter @Setter
 @NoArgsConstructor
 public class Profile {
     @Id
@@ -41,17 +39,15 @@ public class Profile {
 
 
     @Builder
-    public Profile(User user, String nickname, String imgUrl, Integer height,
-                   boolean heightSecret, Integer weight, boolean weightSecret){
+    public Profile(User user, String nickname, Integer height, boolean heightSecret, Integer weight, boolean weightSecret, String imgUrl) {
         this.user = user;
         this.nickname = nickname;
-        this.imgUrl = imgUrl;
         this.height = height;
-        this.weight = weight;
         this.heightSecret = heightSecret;
+        this.weight = weight;
         this.weightSecret = weightSecret;
+        this.imgUrl = imgUrl;
     }
-
 
     // 현재 로그인한 사용자의 username(이메일 주소) 반환
     public String getCurrentUsername(){

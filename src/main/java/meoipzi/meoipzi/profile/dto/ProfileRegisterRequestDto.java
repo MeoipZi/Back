@@ -18,8 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class ProfileRegisterRequestDto {
     private String username;    // 유저 Id
+
     @JsonIgnore
     private MultipartFile imgUrl; // 프로필 사진
+
     private Integer height;  // 신장
     private boolean heightSecret; // 신장 공개 여부
     private Integer weight;  // 몸무게
@@ -28,13 +30,13 @@ public class ProfileRegisterRequestDto {
 
     public Profile toEntity(User user) {
         return Profile.builder()
+                .user(user)
                 .imgUrl(imgUrl != null ? imgUrl.getOriginalFilename() : null)
                 .height(height)
                 .weight(weight)
                 .nickname(nickname)
                 .heightSecret(heightSecret)
                 .weightSecret(weightSecret)
-                .user(user)
                 .build();
     }
 

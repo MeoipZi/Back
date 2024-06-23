@@ -61,10 +61,10 @@ public class ProfileController {
 
     // 프로필 수정
     @PatchMapping("/{profileId}")
-    public ResponseEntity<?> modifyProfile(@PathVariable Long profileId,
+    public ResponseEntity<?> modifyProfile(@PathVariable("profileId") Long profileId,
                                            ProfileUpdateRequestDto profileUpdateRequestDto) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        profileUpdateRequestDto.setUserName(authentication.getName());
+        profileUpdateRequestDto.setUsername(authentication.getName());
         return profileService.updateProfile(profileId, profileUpdateRequestDto);
     }
 }
