@@ -32,7 +32,7 @@ public class CommentController {
         return  commentOutfitService.saveComment(outfitId, commentOutfitRequestDTO);
     }
 
-    //코디 댓글 삭제 - 로그인된 사용자가 자신이 적은 글에만 접근
+    //코디 댓글 삭제 - 로그인된 사용자가 자신이 적은 글에만 접근/***/
     @DeleteMapping("/outfits/{outfitId}/comments/{commentId}")
     public ResponseEntity<?> deleteCommentOutfit(@PathVariable("commentId") Long commentId) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
