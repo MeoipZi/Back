@@ -37,35 +37,35 @@ public class ProfileService {
     @Transactional
     public ResponseEntity<?> registerProfile(ProfileRegisterRequestDto profileRegisterRequestDto) {
         User user = userRepository.findByUsername(profileRegisterRequestDto.getUsername())
-                .orElseThrow(()-> new NotFoundMemberException("해당 이메일에 해당하는 회원이 없습니다. : "+ profileRegisterRequestDto.getUsername()));
+                .orElseThrow(() -> new NotFoundMemberException("해당 이메일에 해당하는 회원이 없습니다. : " + profileRegisterRequestDto.getUsername()));
 
         Profile newProfile = profileRegisterRequestDto.toEntity(user);
+
         try {
-            if(profileRegisterRequestDto.getImgUrl() != null) {
+            if (profileRegisterRequestDto.getImgUrl() != null && !profileRegisterRequestDto.getImgUrl().isEmpty()) {
                 String filePath = s3Config.upload(profileRegisterRequestDto.getImgUrl());
-                newProfile = profileRegisterRequestDto.toEntity(user);
-                newProfile.setImgUrl(filePath);
+                newProfile.setImgUrl(filePath); // 업로드된 파일 경로 설정
             }
-            profileRepository.save(newProfile);
+
+            Profile savedProfile = profileRepository.save(newProfile);
+            System.out.println("Saved Profile ID: " + savedProfile.getProfileId()); // 디버그용 로그
+
+            return ResponseEntity.ok(savedProfile); // 저장된 프로필 반환
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return ResponseEntity.ok(profileRegisterRequestDto);
     }
 
+
+
     // 프로필 정보 조회
-    public ResponseEntity<?> getProfileByUser(User user){
+    public ResponseEntity<?> getProfileByUser(User user) {
         Profile profile = profileRepository.findByUser(user);
-        if(profile == null)
-            return new ResponseEntity<>("프로필을 찾을 수 없습니다. ", HttpStatus.NOT_FOUND);
-        ProfileResponseDto profileResponseDto = new ProfileResponseDto();
-        profileResponseDto.setImgUrl(profile.getImgUrl());
-        profileResponseDto.setUsername(profile.getUser().getUsername());
-        profileResponseDto.setNickname(profile.getNickname());
-        profileResponseDto.setHeight(profile.getHeight());
-        profileResponseDto.setWeight(profile.getWeight());
-        profileResponseDto.setHeightSecret(profile.isHeightSecret());
-        profileResponseDto.setWeightSecret(profile.isWeightSecret());
+        if (profile == null) {
+            return new ResponseEntity<>("프로필을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+        }
+
+        ProfileResponseDto profileResponseDto = new ProfileResponseDto(profile);
 
         return ResponseEntity.ok(profileResponseDto);
     }
@@ -74,8 +74,8 @@ public class ProfileService {
     // 프로필 정보 업데이트
     @Transactional
     public ResponseEntity<?> updateProfile(Long profileId, ProfileUpdateRequestDto profileUpdateRequestDto) throws IOException {
-        User user = userRepository.findByUsername(profileUpdateRequestDto.getUserName())
-                .orElseThrow(() -> new NotFoundMemberException("해당 회원이 조회되지 않습니다" + profileUpdateRequestDto.getUserName()));
+        User user = userRepository.findByUsername(profileUpdateRequestDto.getUsername())
+                .orElseThrow(() -> new NotFoundMemberException("해당 회원이 조회되지 않습니다" + profileUpdateRequestDto.getUsername()));
 
         try {
             Profile originalProfile = profileRepository.findById(profileId)
