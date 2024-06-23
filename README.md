@@ -18,6 +18,7 @@
 - AWS RDS, EC2
 
 ## API 명세서
+---
 ### 👤 회원가입 & 로그인:  `/api`
 | Method | Description | URI |
 | ------- | --- | --- |
@@ -25,7 +26,7 @@
 | POST | 로그인 | /api/authenticate |
 
 ---
-### 🪪 Profiles:  `/profiles`
+### 🪪 Profile Page:  `/profiles`
 
 | Method | Description | URI |
 | ------- | --- | --- |
@@ -36,7 +37,7 @@
 ---
 ### 🏠 Home Page: `/meoipzi`
 
-#### ● StakeHolder 1: Administrator
+#### ● Stakeholder 1: Administrator
 | Method | Description | URI |
 | ------- | --- | --- |
 | POST | 빈티지 소식 업로드 |/meoipzi/news |
@@ -44,7 +45,7 @@
 | POST | 제휴 기업 등록하기 | /meoipzi/partners |
 | DELETE | 제휴 기업 삭제 | /meoipzi/partners/{partnersId}|
 
-#### ● StakeHolder 2: User
+#### ● Stakeholder 2: User
 | Method | Description | URI |
 | ------- | --- | --- |
 | GET | 메인 홈 페이지 조회 |/meoipzi |
@@ -70,13 +71,13 @@
 ---
 ### 🛍️ Product Page: `/products` 
 
-#### ● StakeHolder 1: Administrator
+#### ● Stakeholder 1: Administrator
 | Method | Description | URI |
 | ------- | --- | --- |
 | POST | 상품 등록 |/products |
 | DELETE | 상품 삭제 | /products/{productId} |
 
-#### ● StakeHolder 2: User
+#### ● Stakeholder 2: User
 | Method | Description | URI |
 | ------- | --- | --- |
 | POST | 상품 스크랩 등록/취소 |/products/{productId}/scrap |
@@ -105,15 +106,15 @@
 | GET | 내가 작성한 커뮤니티 게시글 조회 |/mypage/posts/feeds/communities |
 
 ---
-### 📝 Community Page: `/communtiies`
+### 📝 Community Page: `/communities`
 | Method | Description | URI |
 | ------- | --- | --- |
 | POST | 커뮤니티 글 등록 |/communities |
 | DELETE | 커뮤니티 글 삭제 | /communtiies/{communityId} |
 | PATCH | 커뮤니티 글 수정 | /communities/{communtiyId} |
 | GET | 커뮤니티 글 상세 조회 |/communities/{communityId} |
-| GET | 커뮤니티 카테고리별 최신순 조회 | /communtiies/latest?category={categoryName}&page={pageNum}&size={size) |
-| GET | 커뮤니티 카테고리별 인기순 조회 | /communtiies/popular?category={categoryName}&page={pageNum}&size={size) |
+| GET | 커뮤니티 카테고리별 최신순 조회 | /communities/latest?category={categoryName}&page={pageNum}&size={size) |
+| GET | 커뮤니티 카테고리별 인기순 조회 | /communities/popular?category={categoryName}&page={pageNum}&size={size) |
 | POST | 커뮤니티 글 좋아요 등록/삭제 |/communities/{communityId}/like |
 | POST | 커뮤니티 글 댓글 등록 |/communities/{communityId}/comments |
 | DELETE | 커뮤니티 글 댓글 삭제 |/communities/{communityId}/comments/{commentId} |
@@ -121,7 +122,7 @@
 | DELETE | 커뮤니티 글 대댓글 삭제 |/communities/{communityId}/replies/{commentId} |
 
 ---
-### 📹 ShortForm Page: `/shortforms`
+### 📹 Shortform Page: `/shortforms`
 | Method | Description | URI |
 | ------- | --- | --- |
 | POST | 숏폼 글 등록 |/shortforms |
