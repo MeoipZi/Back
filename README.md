@@ -4,9 +4,11 @@
 
 ## 👩‍💻 팀원 소개
 
-|이윤진|이규민|신수정|
-|-------|-------|-------|
-|[@yunjin-21](https://github.com/yunjin-21)|[@keke5149](https://github.com/keke5149)|[@chock-cho](https://github.com/chock-cho)|
+|[이윤진](https://github.com/yunjin-21)|[이규민](https://github.com/keke5149)|[신수정](https://github.com/chock-cho)|
+| :-: | :-: | :-: |
+|  <img src="https://avatars.githubusercontent.com/yunjin-21" width="150"> | <img src="https://avatars.githubusercontent.com/keke5149" width="150">|  <img src="https://avatars.githubusercontent.com/chock-cho" width="150"> |
+|DB 설계 및 API 명세서 작성,<br>Outfit API 개발, Product API 개발,<br>Search API 개발, 댓글 API 개발, 배포 담당| | |
+
 
 <br>
 
